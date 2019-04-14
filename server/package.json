@@ -1,0 +1,17 @@
+{
+	"name": "db-server",
+	"version": "1.0.0",
+	"description": "1st project for Daily Briefing To run app, clone repo locally, navigate to client directory, run 'yarn start'",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"express": "^4.16.4",
+		"firebase-admin": "^6.5.0",
+		"nodemon": "^1.18.9"
+	}
+}

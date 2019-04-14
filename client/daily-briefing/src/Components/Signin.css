@@ -1,0 +1,78 @@
+.Signin {
+	text-align: center;
+}
+
+.Signin-logo {
+	animation: App-logo-spin infinite 20s linear;
+	height: 40vmin;
+	pointer-events: none;
+}
+
+.Signin-header {
+	background-color: #dfe3ee;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	font-size: 24px;
+	color: black;
+	padding-top: 30px;
+}
+
+.Signin-link {
+	color: #61dafb;
+}
+
+.Password {
+	flex-direction: column;
+}
+
+@keyframes App-logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.Standard-Input {
+	width: 300px;
+}
+
+#sign-in {
+	width: 200px;
+	margin-top: 20px;
+	margin-bottom: 5px;
+	height: 40px;
+}
+
+#sign-up-div {
+	margin-top: 0px;
+}
+
+#sign-up {
+	width: 200px;
+	margin-top: 10px;
+	height: 40px;
+}
+
+#sign-up-p {
+	color: black;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-bottom: 0px;
+}
+
+.logo {
+	box-shadow: 0px 20px 5px rgb(186, 185, 185);
+}
+
+.signin-title {
+	color: #3d3d3b;
+	font-size: 200%;
+	text-shadow: 1px 1px 2px grey;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}

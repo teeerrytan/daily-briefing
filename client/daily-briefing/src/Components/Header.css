@@ -1,0 +1,16 @@
+.header {
+	height: 100px;
+	background: linear-gradient(to bottom, #3d3d3b, #4c5870);
+	margin-top: 0px;
+	text-align: center;
+}
+.title {
+	padding-top: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color: #ebedec;
+	font-size: 50px;
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+	text-shadow: 5px 5px 2px rgb(41, 41, 41);
+}

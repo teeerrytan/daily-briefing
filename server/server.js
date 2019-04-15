@@ -1,16 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const firebase = require("firebase");
+const config = require("./firebaseKey.json");
 const port = process.env.PORT || 5000;
-
-const config = {
-	apiKey: "AIzaSyAqc38N6jHL-tIb1lMTczQbqTnWFtZ8QYY",
-	authDomain: "daily-briefing-6b6e2.firebaseapp.com",
-	databaseURL: "https://daily-briefing-6b6e2.firebaseio.com",
-	projectId: "daily-briefing-6b6e2",
-	storageBucket: "daily-briefing-6b6e2.appspot.com",
-	messagingSenderId: "534149453117"
-};
 
 //initialize firebase
 firebase.initializeApp(config);
@@ -44,7 +36,7 @@ app.post("/signup/email", async (req, res) => {
 		const promise = auth.createUserWithEmailAndPassword(username, password);
 		promise
 			.then(info => {
-				res.send(info);
+				response = info;
 			})
 			.catch(error => {
 				// Handle Errors here.

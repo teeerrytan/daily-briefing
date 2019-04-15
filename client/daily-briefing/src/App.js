@@ -3,8 +3,37 @@ import "./App.css";
 import axios from "axios";
 import Signin from "./Components/Signin";
 import Signup from "./Components/Signup";
+import firebase from "firebase";
 
 import Dashboard from "./Components/Dashboard";
+
+var config = {
+	apiKey: "AIzaSyAqc38N6jHL-tIb1lMTczQbqTnWFtZ8QYY",
+	authDomain: "daily-briefing-6b6e2.firebaseapp.com",
+	databaseURL: "https://daily-briefing-6b6e2.firebaseio.com",
+	projectId: "daily-briefing-6b6e2",
+	storageBucket: "daily-briefing-6b6e2.appspot.com",
+	messagingSenderId: "534149453117"
+};
+firebase.initializeApp(config);
+
+const auth = firebase.auth();
+
+function checkIfLoggedIn() {
+	if (localStorage.getItem("firebase_idToken")) {
+	}
+}
+
+function signInWithGoogle() {
+	const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+	auth.signInWithPopup(googleAuthProvider)
+		.then(data => {
+			console.log(data);
+		})
+		.catch(error => {
+			console.log(error);
+		});
+}
 
 class App extends Component {
 	state = {
@@ -51,18 +80,18 @@ class App extends Component {
 
 	//Google login
 	userGoogleLogin() {
+		signInWithGoogle();
 		// Example postRequest with data. Replace static with form input.
-		this.postRequest("/login/google", {
-			temp: "Google"
-		})
-			.then(res => {
-				//TODO: update store
-
-				//TODO: user data process
-				console.log("api answered!  " + res);
-				return res;
-			})
-			.catch(err => console.log(err));
+		// this.postRequest("/login/google", {
+		// 	temp: "Google"
+		// })
+		// 	.then(res => {
+		// 		//TODO: update store
+		// 		//TODO: user data process
+		// 		console.log("api answered!  " + res);
+		// 		return res;
+		// 	})
+		// 	.catch(err => console.log(err));
 	}
 
 	//sign up

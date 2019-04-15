@@ -32,10 +32,10 @@ class App extends Component {
 		}
 	};
 
-	//login
-	userLogin = (username, password) => {
-		// Example postRequest with data. Replace static with form input
-		this.postRequest("/login/user", {
+	//email login
+	userEmailLogin = (username, password) => {
+		// Example postRequest with data. Replace static with form input.
+		this.postRequest("/login/email", {
 			username: username,
 			password: password
 		})
@@ -43,16 +43,32 @@ class App extends Component {
 				//TODO: update store
 
 				//TODO: user data process
-				console.log("api answered!");
+				console.log("api answered!  " + res);
 				return res;
 			})
 			.catch(err => console.log(err));
 	};
 
+	//Google login
+	userGoogleLogin() {
+		// Example postRequest with data. Replace static with form input.
+		this.postRequest("/login/google", {
+			temp: "Google"
+		})
+			.then(res => {
+				//TODO: update store
+
+				//TODO: user data process
+				console.log("api answered!  " + res);
+				return res;
+			})
+			.catch(err => console.log(err));
+	}
+
 	//sign up
 	userSignup = (username, password) => {
 		// Example postRequest with data. Replace static with form input
-		this.postRequest("/signup/user", {
+		this.postRequest("/signup/email", {
 			username: username,
 			password: password
 		})
@@ -60,7 +76,7 @@ class App extends Component {
 				//TODO: update store
 
 				//TODO: user data process
-				console.log("api answered!");
+				console.log("api answered!  ");
 				return res;
 			})
 			.catch(err => console.log(err));
@@ -89,18 +105,20 @@ class App extends Component {
 			case "Signin":
 				return (
 					<Signin
-						userLogin={(username, password) =>
-							this.userLogin(username, password)
+						userEmailLogin={(username, password) =>
+							this.userEmailLogin(username, password)
 						}
+						userGoogleLogin={() => this.userGoogleLogin()}
 						changePage={cur => this.changePage(cur)}
 					/>
 				);
 			default:
 				return (
 					<Signin
-						userLogin={(username, password) =>
-							this.userLogin(username, password)
+						userEmailLogin={(username, password) =>
+							this.userEmailLogin(username, password)
 						}
+						userGoogleLogin={() => this.userGoogleLogin()}
 						changePage={cur => this.changePage(cur)}
 					/>
 				);

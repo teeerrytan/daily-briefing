@@ -130,7 +130,7 @@ class Signin extends Component {
 						className={classNames(classes.signin)}
 						id="sign-in"
 						onClick={() =>
-							this.props.userLogin(
+							this.props.userEmailLogin(
 								this.state.username,
 								this.state.password
 							)
@@ -146,7 +146,7 @@ class Signin extends Component {
 						color="primary"
 						className={classNames(classes.signin)}
 						id="sign-in"
-						onClick={() => this.handleSignin()}
+						onClick={() => this.props.userGoogleLogin()}
 					>
 						Sign in with Google
 					</Button>

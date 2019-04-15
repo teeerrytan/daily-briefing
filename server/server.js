@@ -83,7 +83,7 @@ app.post("/login/email", async (req, res) => {
 	}
 });
 
-//Google login
+//Google login, don't use for now
 app.post("/login/google", async (req, res) => {
 	try {
 		let user;

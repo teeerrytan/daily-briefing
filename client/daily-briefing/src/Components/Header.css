@@ -2,15 +2,24 @@
 	height: 100px;
 	background: linear-gradient(to bottom, #3d3d3b, #4c5870);
 	margin-top: 0px;
-	text-align: center;
 }
 .title {
 	padding-top: 20px;
-	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-top: 7px;
+	margin-left: 17px;
 	color: #ebedec;
-	font-size: 50px;
+	font-size: 2rem;
 	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
 		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 	text-shadow: 5px 5px 2px rgb(41, 41, 41);
+	float: left;
+}
+
+.avatar {
+	float: right;
+}
+
+.avatar-img {
+	margin-top: 20px;
+	margin-right: 17px;
 }

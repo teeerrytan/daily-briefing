@@ -2,7 +2,9 @@ const initialState = {
 	username: "",
 	email: "",
 	phone: "",
-	currentPage: ""
+	currentPage: "",
+	userToken: "",
+	userImageURL: ""
 };
 
 export default function userReducer(state = initialState, action) {

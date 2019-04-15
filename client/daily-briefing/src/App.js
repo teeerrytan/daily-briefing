@@ -19,22 +19,6 @@ firebase.initializeApp(config);
 
 const auth = firebase.auth();
 
-function checkIfLoggedIn() {
-	if (localStorage.getItem("firebase_idToken")) {
-	}
-}
-
-function signInWithGoogle() {
-	const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-	auth.signInWithPopup(googleAuthProvider)
-		.then(data => {
-			console.log(data);
-		})
-		.catch(error => {
-			console.log(error);
-		});
-}
-
 class App extends Component {
 	state = {
 		currentPage: ""
@@ -61,6 +45,24 @@ class App extends Component {
 		}
 	};
 
+	checkIfLoggedIn = () => {
+		if (localStorage.getItem("firebase_idToken")) {
+		}
+	};
+
+	signInWithGoogle = () => {
+		const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+		auth.signInWithPopup(googleAuthProvider)
+			.then(data => {
+				console.log(data);
+				this.changePage("Dashboard");
+				//update store
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	};
+
 	//email login
 	userEmailLogin = (username, password) => {
 		// Example postRequest with data. Replace static with form input.
@@ -80,7 +82,7 @@ class App extends Component {
 
 	//Google login
 	userGoogleLogin() {
-		signInWithGoogle();
+		this.signInWithGoogle();
 		// Example postRequest with data. Replace static with form input.
 		// this.postRequest("/login/google", {
 		// 	temp: "Google"
@@ -121,7 +123,7 @@ class App extends Component {
 		//switch page based on the value "currentPage" in store. Easier implementation than routers
 		switch (this.state.currentPage) {
 			case "Dashboard":
-				return <Dashboard />;
+				return <Dashboard changePage={cur => this.changePage(cur)} />;
 			case "Signup":
 				return (
 					<Signup

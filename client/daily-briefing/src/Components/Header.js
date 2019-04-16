@@ -8,10 +8,9 @@ export default class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			photoURL:
-				"https://lh6.googleusercontent.com/-xDvfOGQV_C0/AAAAAAAAAAI/AAAAAAAAADI/OJgNEtJ94MA/photo.jpg",
-			displayName: "Terry Tan",
-			email: "tmy1995hflc@gmail.com",
+			photoURL: this.props.photoURL,
+			displayName: this.props.displayName,
+			email: this.props.email,
 			anchorEl: null,
 			auth: true
 		};
@@ -64,9 +63,12 @@ export default class Header extends Component {
 							onClose={this.handleClose}
 						>
 							<MenuItem onClick={this.handleClose}>
-								{this.state.email}
+								{this.state.displayName}
 							</MenuItem>
 							<MenuItem onClick={this.handleClose}>
+								{this.state.email}
+							</MenuItem>
+							<MenuItem onClick={this.props.handleExit}>
 								Log out
 							</MenuItem>
 						</Menu>

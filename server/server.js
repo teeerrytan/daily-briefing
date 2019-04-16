@@ -73,13 +73,13 @@ app.post("/login/email", async (req, res) => {
 				response = errorMessage;
 			});
 		if (!response) {
-			response = `${username} logged in!`;
+			response = "1";
 		}
-		console.log(response);
+		console.log("email sucess login!");
 		res.send(response);
 		//login process
 	} catch (e) {
-		res.sendStatus(400).send(e);
+		res.sendStatus(400);
 	}
 });
 

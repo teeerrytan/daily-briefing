@@ -4,7 +4,9 @@ import axios from "axios";
 import Signin from "./Components/Signin";
 import Signup from "./Components/Signup";
 import firebase from "firebase";
-
+import { connect } from "react-redux";
+import { login } from "./Actions/actions";
+import Loading from "./Components/Loading";
 import Dashboard from "./Components/Dashboard";
 
 var config = {
@@ -20,9 +22,22 @@ firebase.initializeApp(config);
 const auth = firebase.auth();
 
 class App extends Component {
-	state = {
-		currentPage: ""
-	};
+	constructor(props) {
+		super(props);
+
+		this.onLogin = this.onLogin.bind(this);
+		this.state = {
+			currentPage: "Signin",
+			photoURL: this.props.photoURL,
+			displayName: this.props.displayName,
+			email: this.props.email
+		};
+	}
+
+	onLogin(user) {
+		this.props.onLogin(user);
+	}
+
 	//universal http interface
 	getRequest = async route => {
 		const res = await axios.get(route);
@@ -55,7 +70,21 @@ class App extends Component {
 		auth.signInWithPopup(googleAuthProvider)
 			.then(data => {
 				console.log(data);
+				//update store
+				// this.setState({
+				// 	photoURL: data.user.photoURL,
+				// 	displayName: data.user.displayName,
+				// 	email: data.user.email
+				// });
+				const user = {
+					photoURL: data.user.photoURL,
+					displayName: data.user.displayName,
+					email: data.user.email
+				};
+
+				this.onLogin(user);
 				this.changePage("Dashboard");
+
 				//update store
 			})
 			.catch(error => {
@@ -71,11 +100,17 @@ class App extends Component {
 			password: password
 		})
 			.then(res => {
-				//TODO: update store
+				if (res == "1") {
+					//TODO: update store
 
+					//change page
+					this.setState({
+						APISuccess: true
+					});
+					this.changePage("Dashboard");
+				}
 				//TODO: user data process
-				console.log("api answered!  " + res);
-				return res;
+				console.log("api answered!" + res);
 			})
 			.catch(err => console.log(err));
 	};
@@ -120,10 +155,18 @@ class App extends Component {
 	}
 
 	render() {
+		console.log(this.props.state);
 		//switch page based on the value "currentPage" in store. Easier implementation than routers
 		switch (this.state.currentPage) {
 			case "Dashboard":
-				return <Dashboard changePage={cur => this.changePage(cur)} />;
+				return (
+					<Dashboard
+						changePage={cur => this.changePage(cur)}
+						photoURL={this.state.photoURL}
+						displayName={this.state.displayName}
+						email={this.state.email}
+					/>
+				);
 			case "Signup":
 				return (
 					<Signup
@@ -143,6 +186,8 @@ class App extends Component {
 						changePage={cur => this.changePage(cur)}
 					/>
 				);
+			case "Loading":
+				return <Loading />;
 			default:
 				return (
 					<Signin
@@ -157,4 +202,18 @@ class App extends Component {
 	}
 }
 
-export default App;
+const mapStateToProps = state => ({
+	email: state.email,
+	displayName: state.displayName,
+	photoURL: state.photoURL,
+	auth: state.auth
+});
+
+const mapActionsToProps = {
+	onLogin: login
+};
+
+export default connect(
+	mapStateToProps,
+	mapActionsToProps
+)(App);

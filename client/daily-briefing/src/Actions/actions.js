@@ -1,7 +1,13 @@
-export const login = profile => ({
-	type: "LOGIN",
-
-	email: profile.email,
-	phone: profile.phone,
-	username: profile.username
-});
+export function login(newUser) {
+	return {
+		type: "LOGIN",
+		payload: {
+			user: {
+				displayName: newUser.displayName,
+				email: newUser.email,
+				photoURL: newUser.photoURL
+			},
+			auth: true
+		}
+	};
+}

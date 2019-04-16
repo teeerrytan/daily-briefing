@@ -88,6 +88,11 @@ class Signin extends Component {
 		this.props.changePage("Signup");
 	}
 
+	handleSignin() {
+		this.props.changePage("Loading");
+		this.props.userEmailLogin(this.state.username, this.state.password);
+	}
+
 	render() {
 		const { classes } = this.props;
 		console.log("signin page states: \n", this.state);
@@ -129,12 +134,7 @@ class Signin extends Component {
 						color="primary"
 						className={classNames(classes.signin)}
 						id="sign-in"
-						onClick={() =>
-							this.props.userEmailLogin(
-								this.state.username,
-								this.state.password
-							)
-						}
+						onClick={() => this.handleSignin()}
 					>
 						Sign in
 					</Button>

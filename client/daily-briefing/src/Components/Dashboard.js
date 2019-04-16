@@ -51,10 +51,10 @@ class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			photoURL:
-				"https://lh6.googleusercontent.com/-xDvfOGQV_C0/AAAAAAAAAAI/AAAAAAAAADI/OJgNEtJ94MA/photo.jpg",
-			displayName: "Terry Tan",
-			email: "tmy1995hflc@gmail.com"
+			data: "",
+			photoURL: this.props.photoURL,
+			displayName: this.props.displayName,
+			email: this.props.email
 		};
 	}
 
@@ -68,19 +68,16 @@ class Dashboard extends Component {
 		console.log("Dashboard page states: \n", this.state);
 		return (
 			<div className="Dashboard">
-				<Header className="logo" />
+				<Header
+					className="logo"
+					photoURL={this.state.photoURL}
+					displayName={this.state.displayName}
+					email={this.state.email}
+					handleExit={() => this.handleExit()}
+				/>
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> DashBoard </p>
 					<hr className="hr-main" />
-					<Button
-						variant="contained"
-						color="secondary"
-						id="cancel"
-						onClick={() => this.handleExit()}
-						className={classNames(classes.signup)}
-					>
-						Exit / Logout
-					</Button>
 				</header>
 			</div>
 		);

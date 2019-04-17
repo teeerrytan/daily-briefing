@@ -27,7 +27,7 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			currentPage: "Dashboard",
+			currentPage: "Signin",
 			photoURL: this.props.user.photoURL,
 			displayName: this.props.user.displayName,
 			email: this.props.user.email

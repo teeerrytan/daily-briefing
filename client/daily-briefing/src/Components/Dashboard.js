@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import "./Dashboard.css";
-import Button from "@material-ui/core/Button";
 import blueGrey from "@material-ui/core/colors/blueGrey";
-import classNames from "classnames";
 import Header from "./Header";
 import { login } from "../Actions/actions";
 import { connect } from "react-redux";
+import List from "./List";
 
 const mapDispatchToProps = {
 	login
@@ -77,6 +76,7 @@ class Dashboard extends Component {
 				/>
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> DashBoard </p>
+					<List />
 					<hr className="hr-main" />
 				</header>
 			</div>

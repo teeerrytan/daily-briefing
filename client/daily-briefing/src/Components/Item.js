@@ -1,4 +1,5 @@
 import React from "react";
+import "./Item.css";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -10,8 +11,6 @@ import Divider from "@material-ui/core/Divider";
 import MaterialIcon from "@material/react-material-icon";
 import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import Link from "@material-ui/core/Link";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const styles = theme => ({
@@ -41,7 +40,7 @@ class FolderList extends React.Component {
 			<div>
 				<ListItem button onClick={this.handleClick}>
 					<Avatar>
-						<MaterialIcon icon="work" />
+						<MaterialIcon icon={this.state.content.icon} />
 					</Avatar>
 					<ListItemText
 						primary={this.state.content.title}

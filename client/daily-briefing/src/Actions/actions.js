@@ -7,7 +7,30 @@ export function login(state) {
 				email: state.user.email,
 				photoURL: state.user.photoURL
 			},
-			auth: state.auth
+			auth: state.auth,
+			currentPage: "Dashboard"
 		}
+	};
+}
+
+export function logout() {
+	return {
+		type: "LOGOUT",
+		payload: {
+			user: {
+				displayName: "",
+				email: "",
+				photoURL: ""
+			},
+			auth: false,
+			currentPage: "Signin"
+		}
+	};
+}
+
+export function changePage(page) {
+	return {
+		type: "CHANGE_PAGE",
+		currentPage: page
 	};
 }

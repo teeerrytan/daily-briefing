@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import "./Signin.css";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -11,21 +11,16 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import classNames from "classnames";
-
 import Header from "./Header";
-import { login } from "../Actions/actions";
+import { changePage } from "../Actions/actions";
 import { connect } from "react-redux";
-
-const mapDispatchToProps = {
-	login
-};
 
 const styles = theme => ({
 	signin: {
-		color: theme.palette.getContrastText(blueGrey[700]),
-		backgroundColor: blueGrey[500],
+		color: theme.palette.getContrastText(blueGrey[600]),
+		backgroundColor: blueGrey[700],
 		"&:hover": {
-			backgroundColor: blueGrey[700]
+			backgroundColor: blueGrey[900]
 		}
 	},
 	signup: {
@@ -90,11 +85,11 @@ class Signin extends Component {
 	};
 
 	handleSignup() {
-		this.props.changePage("Signup");
+		this.props.dispatch(changePage("Signup"));
 	}
 
 	handleSignin() {
-		this.props.changePage("Loading");
+		this.props.dispatch(changePage("Loading"));
 		this.props.userEmailLogin(this.state.username, this.state.password);
 	}
 
@@ -254,7 +249,4 @@ Signin.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default connect(
-	null,
-	mapDispatchToProps
-)(withStyles(styles)(Signin));
+export default connect()(withStyles(styles)(Signin));

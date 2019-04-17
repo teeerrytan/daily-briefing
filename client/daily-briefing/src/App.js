@@ -5,7 +5,6 @@ import Signin from "./Components/Signin";
 import Signup from "./Components/Signup";
 import firebase from "firebase";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import { login } from "./Actions/actions";
 import Loading from "./Components/Loading";
 import Dashboard from "./Components/Dashboard";
@@ -26,12 +25,10 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			currentPage: "Signin",
-			photoURL: this.props.user.photoURL,
-			displayName: this.props.user.displayName,
-			email: this.props.user.email
-		};
+		this.state = {};
+	}
+	componentDidMount() {
+		this.setState({ currentPage: this.props.currentPage });
 	}
 
 	//universal http interface
@@ -82,8 +79,6 @@ class App extends Component {
 				};
 
 				this.props.dispatch(login(state));
-				this.changePage("Dashboard");
-
 				//update store
 			})
 			.catch(error => {
@@ -108,7 +103,8 @@ class App extends Component {
 					});
 					const state = {
 						user: {
-							photoURL: "./static/avatar.jpg",
+							photoURL:
+								"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
 							displayName: username,
 							email: username
 						},
@@ -116,7 +112,6 @@ class App extends Component {
 					};
 
 					this.props.dispatch(login(state));
-					this.changePage("Dashboard");
 				}
 				//TODO: user data process
 				console.log("api answered!" + res);
@@ -157,15 +152,9 @@ class App extends Component {
 			.catch(err => console.log(err));
 	};
 
-	changePage(value) {
-		this.setState({
-			currentPage: value
-		});
-	}
-
 	render() {
 		//switch page based on the value "currentPage" in store. Easier implementation than routers
-		switch (this.state.currentPage) {
+		switch (this.props.user.currentPage) {
 			case "Dashboard":
 				return (
 					<Dashboard
@@ -181,7 +170,6 @@ class App extends Component {
 						userSignup={(username, password) =>
 							this.userSignup(username, password)
 						}
-						changePage={cur => this.changePage(cur)}
 					/>
 				);
 			case "Signin":
@@ -191,7 +179,6 @@ class App extends Component {
 							this.userEmailLogin(username, password)
 						}
 						userGoogleLogin={() => this.userGoogleLogin()}
-						changePage={cur => this.changePage(cur)}
 					/>
 				);
 			case "Loading":
@@ -203,7 +190,6 @@ class App extends Component {
 							this.userEmailLogin(username, password)
 						}
 						userGoogleLogin={() => this.userGoogleLogin()}
-						changePage={cur => this.changePage(cur)}
 					/>
 				);
 		}
@@ -212,7 +198,9 @@ class App extends Component {
 
 const mapStateToProps = state => {
 	return {
-		user: state.user
+		user: state.user,
+		auth: state.auth,
+		currentPage: state.currentPage
 	};
 };
 

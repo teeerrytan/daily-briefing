@@ -12,6 +12,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import classNames from "classnames";
 import Header from "./Header";
+import { changePage } from "../Actions/actions";
+import { connect } from "react-redux";
 
 const styles = theme => ({
 	signin: {
@@ -92,11 +94,11 @@ class Signup extends Component {
 
 	handleWarning4Close() {
 		this.setState({ warning4: false });
-		this.props.changePage("Signin");
+		this.props.dispatch(changePage("Signin"));
 	}
 
 	handleCancel() {
-		this.props.changePage("Signin");
+		this.props.dispatch(changePage("Signin"));
 	}
 
 	handleChange = e => {
@@ -110,16 +112,16 @@ class Signup extends Component {
 
 		const { classes } = this.props;
 
-		var selectorStyle = {
-			control: base => ({
-				...base,
-				fontSize: "18px"
-			}),
-			menu: base => ({
-				...base,
-				fontSize: "14px"
-			})
-		};
+		// var selectorStyle = {
+		// 	control: base => ({
+		// 		...base,
+		// 		fontSize: "18px"
+		// 	}),
+		// 	menu: base => ({
+		// 		...base,
+		// 		fontSize: "14px"
+		// 	})
+		// };
 
 		return (
 			<div className="Signup">
@@ -277,4 +279,4 @@ Signup.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Signup);
+export default connect()(withStyles(styles)(Signup));

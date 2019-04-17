@@ -6,12 +6,11 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducers from "./Reducers/index";
 import * as serviceWorker from "./serviceWorker";
-import { login } from "./Actions/actions";
 
 //public store for everything
 export const store = createStore(
 	reducers,
-	window.devToolsExtension && window.devToolsExtension()
+	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 //listen to store

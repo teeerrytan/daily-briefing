@@ -4,6 +4,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { connect } from "react-redux";
+import { logout } from "../Actions/actions";
 
 class Header extends Component {
 	constructor(props) {
@@ -24,6 +25,11 @@ class Header extends Component {
 	};
 
 	handleClose = () => {
+		this.setState({ anchorEl: null });
+	};
+
+	handleExit = () => {
+		this.props.dispatch(logout());
 		this.setState({ anchorEl: null });
 	};
 	render() {
@@ -72,7 +78,7 @@ class Header extends Component {
 							<MenuItem onClick={this.handleClose}>
 								{this.state.user.email}
 							</MenuItem>
-							<MenuItem onClick={this.props.handleExit}>
+							<MenuItem onClick={this.handleExit}>
 								Log out
 							</MenuItem>
 						</Menu>

@@ -1,3 +1,7 @@
-.delete-button {
-	margin-right: 50px;
+.list-name {
+	font-size: 20px;
+	margin-top: 5px;
+	margin-bottom: -5px;
+	margin-left: 5px;
+	float: left;
 }

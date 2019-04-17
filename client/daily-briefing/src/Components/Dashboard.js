@@ -4,13 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import "./Dashboard.css";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import Header from "./Header";
-import { login } from "../Actions/actions";
 import { connect } from "react-redux";
 import List from "./List";
-
-const mapDispatchToProps = {
-	login
-};
 
 const styles = theme => ({
 	signin: {
@@ -57,13 +52,7 @@ class Dashboard extends Component {
 		};
 	}
 
-	//functions
-	handleExit() {
-		this.props.changePage("Signin");
-	}
-
 	render() {
-		const { classes } = this.props;
 		console.log("Dashboard page states: \n", this.state);
 		return (
 			<div className="Dashboard">
@@ -72,7 +61,6 @@ class Dashboard extends Component {
 					photoURL={this.state.photoURL}
 					displayName={this.state.displayName}
 					email={this.state.email}
-					handleExit={() => this.handleExit()}
 				/>
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> DashBoard </p>
@@ -88,7 +76,4 @@ Dashboard.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default connect(
-	null,
-	mapDispatchToProps
-)(withStyles(styles)(Dashboard));
+export default connect()(withStyles(styles)(Dashboard));

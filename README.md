@@ -1,5 +1,7 @@
 # daily-briefing
 
+get firebaseKet.json
+
 0. :dash: Preparation work
 
 ```javascript
@@ -23,6 +25,7 @@ nodemon server.js
 ```javascript
 cd
 cd client
+cd daily-briefing
 yarn
 yarn start
 ```

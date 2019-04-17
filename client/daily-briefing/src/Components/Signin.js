@@ -89,8 +89,16 @@ class Signin extends Component {
 	}
 
 	handleSignin() {
-		this.props.dispatch(changePage("Loading"));
-		this.props.userEmailLogin(this.state.username, this.state.password);
+		if (this.state.username === '') {
+			this.setState({usernameEmptyWarning: true})
+			return this.state.usernameEmptyWarning
+		} else if	(this.state.password === '') {
+			this.setState({passwordEmptyWarning: true})
+			return this.state.passwordEmptyWarning
+		} else {
+			// this.props.dispatch(changePage("Loading"));
+			this.props.userEmailLogin(this.state.username, this.state.password)
+		}
 	}
 
 	render() {
@@ -111,6 +119,7 @@ class Signin extends Component {
 							width: "300px"
 						}}
 						name="username"
+						required
 						onChange={e => this.handleChange(e)}
 					/>
 					<div className="Password">
@@ -125,6 +134,7 @@ class Signin extends Component {
 								width: "300px"
 							}}
 							name="password"
+							required
 							onChange={e => this.handleChange(e)}
 						/>
 						{/* <p>Forgot Password</p> */}

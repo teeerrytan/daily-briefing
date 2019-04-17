@@ -94,9 +94,10 @@ class App extends Component {
 			password: password
 		})
 			.then(res => {
+				console.log(res)
 				if (res == "1") {
 					//TODO: update store
-
+					console.log("got here")
 					//change page
 					this.setState({
 						APISuccess: true
@@ -112,6 +113,13 @@ class App extends Component {
 					};
 
 					this.props.dispatch(login(state));
+				}
+				else {
+					this.setState({
+						APISuccess: false
+					});
+					return false
+
 				}
 				//TODO: user data process
 				console.log("api answered!" + res);

@@ -27,7 +27,6 @@ store.subscribe(() => {
 // 	auth: true
 // };
 // store.dispatch(login(payload));
-
 render(
 	<Provider store={store}>
 		<App />

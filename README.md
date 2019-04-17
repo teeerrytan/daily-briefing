@@ -2,10 +2,10 @@
 
 0. :dash: Preparation work
 ```javascript
-//install Homebrew
+//install Homebrew, skip if already installed
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-//intsll Yarn
+//intsll Yarn, skip if already installed
 brew install yarn
 ```
 1. :rocket: Launch backend

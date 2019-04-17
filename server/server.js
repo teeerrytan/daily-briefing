@@ -75,7 +75,7 @@ app.post("/login/email", async (req, res) => {
 		if (!response) {
 			response = "1";
 		}
-		console.log("email sucess login!");
+		console.log(response);
 		res.send(response);
 		//login process
 	} catch (e) {

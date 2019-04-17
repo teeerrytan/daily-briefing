@@ -4,24 +4,31 @@ import "./index.css";
 import App from "./App";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import reducers from "./Reducers";
+import reducers from "./Reducers/index";
 import * as serviceWorker from "./serviceWorker";
+import { login } from "./Actions/actions";
 
 //public store for everything
 export const store = createStore(
 	reducers,
-	{
-		user: {
-			displayName: "test",
-			email: "test",
-			photoURL: "test"
-		}
-	},
 	window.devToolsExtension && window.devToolsExtension()
 );
 
-//get initial store states
-console.log(store.getState());
+//listen to store
+store.subscribe(() => {
+	console.log(store.getState());
+});
+//test redux
+// const payload = {
+// 	user: {
+// 		displayName: "terry",
+// 		email: "terrytan@terrytan.dev",
+// 		photoURL: "./static/avatar.jpg"
+// 	},
+// 	auth: true
+// };
+// store.dispatch(login(payload));
+
 render(
 	<Provider store={store}>
 		<App />

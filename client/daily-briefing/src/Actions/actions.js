@@ -1,13 +1,13 @@
-export function login(newUser) {
+export function login(state) {
 	return {
 		type: "LOGIN",
 		payload: {
 			user: {
-				displayName: newUser.displayName,
-				email: newUser.email,
-				photoURL: newUser.photoURL
+				displayName: state.user.displayName,
+				email: state.user.email,
+				photoURL: state.user.photoURL
 			},
-			auth: true
+			auth: state.auth
 		}
 	};
 }

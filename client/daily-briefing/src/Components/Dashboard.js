@@ -51,10 +51,10 @@ class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: "",
-			photoURL: this.props.photoURL,
-			displayName: this.props.displayName,
-			email: this.props.email
+			data: ""
+			// photoURL: this.props.user.photoURL,
+			// displayName: this.props.user.displayName,
+			// email: this.props.user.email
 		};
 	}
 

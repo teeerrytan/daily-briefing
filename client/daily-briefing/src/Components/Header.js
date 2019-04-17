@@ -3,16 +3,19 @@ import "./Header.css";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import { connect } from "react-redux";
 
-export default class Header extends Component {
+class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			photoURL: this.props.photoURL,
-			displayName: this.props.displayName,
-			email: this.props.email,
+			user: {
+				photoURL: this.props.user.user.photoURL,
+				displayName: this.props.user.user.displayName,
+				email: this.props.user.user.email
+			},
 			anchorEl: null,
-			auth: true
+			auth: this.props.user.auth
 		};
 	}
 
@@ -24,6 +27,7 @@ export default class Header extends Component {
 		this.setState({ anchorEl: null });
 	};
 	render() {
+		console.log("header page states: \n", this.state);
 		const { auth, anchorEl } = this.state;
 		const open = Boolean(anchorEl);
 		return (
@@ -39,7 +43,7 @@ export default class Header extends Component {
 							className="avatar"
 						>
 							<img
-								src={this.state.photoURL}
+								src={this.state.user.photoURL}
 								style={{
 									width: "60px",
 									borderRadius: "50%"
@@ -63,10 +67,10 @@ export default class Header extends Component {
 							onClose={this.handleClose}
 						>
 							<MenuItem onClick={this.handleClose}>
-								{this.state.displayName}
+								{this.state.user.displayName}
 							</MenuItem>
 							<MenuItem onClick={this.handleClose}>
-								{this.state.email}
+								{this.state.user.email}
 							</MenuItem>
 							<MenuItem onClick={this.props.handleExit}>
 								Log out
@@ -78,3 +82,12 @@ export default class Header extends Component {
 		);
 	}
 }
+
+const mapStateToProps = state => {
+	return {
+		user: state.user,
+		auth: state.auth
+	};
+};
+
+export default connect(mapStateToProps)(Header);

@@ -82,6 +82,11 @@ class Signin extends Component {
 		this.setState({
 			[e.target.name]: e.target.value
 		});
+		//get input func
+		// const node = findDOMNode(this.refs.input);
+		// const text = node.value.trim();
+		// this.props.onAddClick(text);
+		// node.value = "";
 	};
 
 	handleSignup() {

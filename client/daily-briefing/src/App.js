@@ -5,6 +5,7 @@ import Signin from "./Components/Signin";
 import Signup from "./Components/Signup";
 import firebase from "firebase";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { login } from "./Actions/actions";
 import Loading from "./Components/Loading";
 import Dashboard from "./Components/Dashboard";
@@ -25,17 +26,12 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		this.onLogin = this.onLogin.bind(this);
 		this.state = {
 			currentPage: "Signin",
-			photoURL: this.props.photoURL,
-			displayName: this.props.displayName,
-			email: this.props.email
+			photoURL: this.props.user.photoURL,
+			displayName: this.props.user.displayName,
+			email: this.props.user.email
 		};
-	}
-
-	onLogin(user) {
-		this.props.onLogin(user);
 	}
 
 	//universal http interface
@@ -76,13 +72,16 @@ class App extends Component {
 				// 	displayName: data.user.displayName,
 				// 	email: data.user.email
 				// });
-				const user = {
-					photoURL: data.user.photoURL,
-					displayName: data.user.displayName,
-					email: data.user.email
+				const state = {
+					user: {
+						photoURL: data.user.photoURL,
+						displayName: data.user.displayName,
+						email: data.user.email
+					},
+					auth: true
 				};
 
-				this.onLogin(user);
+				this.props.dispatch(login(state));
 				this.changePage("Dashboard");
 
 				//update store
@@ -107,6 +106,16 @@ class App extends Component {
 					this.setState({
 						APISuccess: true
 					});
+					const state = {
+						user: {
+							photoURL: "./static/avatar.jpg",
+							displayName: username,
+							email: username
+						},
+						auth: true
+					};
+
+					this.props.dispatch(login(state));
 					this.changePage("Dashboard");
 				}
 				//TODO: user data process
@@ -155,7 +164,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.props.state);
 		//switch page based on the value "currentPage" in store. Easier implementation than routers
 		switch (this.state.currentPage) {
 			case "Dashboard":
@@ -202,18 +210,10 @@ class App extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	email: state.email,
-	displayName: state.displayName,
-	photoURL: state.photoURL,
-	auth: state.auth
-});
-
-const mapActionsToProps = {
-	onLogin: login
+const mapStateToProps = state => {
+	return {
+		user: state.user
+	};
 };
 
-export default connect(
-	mapStateToProps,
-	mapActionsToProps
-)(App);
+export default connect(mapStateToProps)(App);

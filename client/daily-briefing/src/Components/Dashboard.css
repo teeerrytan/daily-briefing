@@ -9,7 +9,7 @@
 }
 
 .Dashboard-header {
-	background-color: #dfe3ee;
+	background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;

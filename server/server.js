@@ -65,6 +65,7 @@ app.post("/login/email", async (req, res) => {
 
 		await auth
 			.signInWithEmailAndPassword(username, password)
+			.then(success => {})
 			.catch(error => {
 				// Handle Errors here.
 				//var errorCode = error.code;

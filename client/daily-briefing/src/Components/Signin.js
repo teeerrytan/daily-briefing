@@ -89,18 +89,26 @@ class Signin extends Component {
 	}
 
 	handleSignin() {
-		if (this.state.username === '') {
-			this.setState({usernameEmptyWarning: true})
-			return this.state.usernameEmptyWarning
-		} else if	(this.state.password === '') {
-			this.setState({passwordEmptyWarning: true})
-			return this.state.passwordEmptyWarning
+		if (this.state.username === "") {
+			this.setState({ usernameEmptyWarning: true });
+			return this.state.usernameEmptyWarning;
+		} else if (this.state.password === "") {
+			this.setState({ passwordEmptyWarning: true });
+			return this.state.passwordEmptyWarning;
 		} else {
-			// this.props.dispatch(changePage("Loading"));
-			this.props.userEmailLogin(this.state.username, this.state.password)
-
-			this.setState({ userNotFoundWarning: true })
-			return this.state.userNotFoundWarning
+			//show the loading page firstly
+			this.props.dispatch(changePage("Loading"));
+			//get the response from the emailLogin function
+			const response = this.props.userEmailLogin(
+				this.state.username,
+				this.state.password
+			);
+			//if not "1" which means unsuccessful login, then pop warning page and redirect back to signin page
+			if (response !== "1") {
+				this.setState({ userNotFoundWarning: true });
+				this.props.dispatch(changePage("Signin"));
+				return this.state.userNotFoundWarning;
+			}
 		}
 	}
 
@@ -239,7 +247,8 @@ class Signin extends Component {
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							The attempted login request has been denied. Please check your email or password.
+							The attempted login request has been denied. Please
+							check your email or password.
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>

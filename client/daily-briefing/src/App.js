@@ -113,11 +113,12 @@ class App extends Component {
 					};
 
 					this.props.dispatch(login(state));
+					return res;
 				} else {
 					this.setState({
 						APISuccess: false
 					});
-					return false;
+					return res;
 				}
 				//TODO: user data process
 				console.log("api answered!" + res);
@@ -149,10 +150,8 @@ class App extends Component {
 			password: password
 		})
 			.then(res => {
-				//TODO: update store
-
-				//TODO: user data process
-				console.log("api answered!  ");
+				//don't do if else here, leave it for func in signup page
+				console.log("app.js returns " + res);
 				return res;
 			})
 			.catch(err => console.log(err));

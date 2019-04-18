@@ -67,17 +67,33 @@ class Signup extends Component {
 		let username = this.state.username;
 		let password1 = this.state.password1;
 		let password2 = this.state.password2;
+		let response;
 		if (username === "") {
 			this.setState({ warning1: true });
+			return;
 		} else if (password1 === "" || password2 === "") {
 			this.setState({ warning2: true });
+			return;
 		} else if (password1 !== password2) {
 			this.setState({ warning3: true });
+			return;
 		} else {
-			this.props.userSignup(this.state.username, this.state.password1);
+			//get the response from the sign up function
+			response = this.props.userSignup(
+				this.state.username,
+				this.state.password1
+			);
+		}
+		console.log("signup page: " + response);
+		//if not "1" which means unsuccessful Signup, then pop warning page and redirect to signup page
+		if (response !== "1") {
+			//there is error
+			this.setState({ warning1: true });
+			this.props.dispatch(changePage("Signup"));
+		} else {
+			//success
 			this.setState({ warning4: true });
 		}
-		//TODO: call Signup API, add to database and update currentPage to "Dashboard"
 	}
 
 	handleWarning1Close() {
@@ -185,11 +201,12 @@ class Signup extends Component {
 					onClose={() => this.handleWarning1Close()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your Username!"}
+						{"Please Check Your input!"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							Username cannot be empty!
+							Username cannot be empty or the email address is
+							already in use by another account!
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
@@ -208,7 +225,7 @@ class Signup extends Component {
 					onClose={() => this.handleWarning2Close()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your Password!"}
+						{"Please Check Your input!"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
@@ -231,7 +248,7 @@ class Signup extends Component {
 					onClose={() => this.handleWarning3Close()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your Passwords!"}
+						{"Please Check Your input!"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>

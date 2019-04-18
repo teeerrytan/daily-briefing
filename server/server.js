@@ -33,11 +33,8 @@ app.post("/signup/email", async (req, res) => {
 		let response;
 
 		console.log("username: " + username + " password: " + password);
-		const promise = auth.createUserWithEmailAndPassword(username, password);
-		promise
-			.then(info => {
-				response = info;
-			})
+		await auth
+			.createUserWithEmailAndPassword(username, password)
 			.catch(error => {
 				// Handle Errors here.
 				//var errorCode = error.code;
@@ -45,8 +42,9 @@ app.post("/signup/email", async (req, res) => {
 				console.log(errorMessage);
 				response = errorMessage;
 			});
+		//if no error then
 		if (!response) {
-			response = `${username} signed up!`;
+			response = "1";
 		}
 		console.log(response);
 		res.send(response);
@@ -65,18 +63,18 @@ app.post("/login/email", async (req, res) => {
 
 		await auth
 			.signInWithEmailAndPassword(username, password)
-			.then(success => {})
 			.catch(error => {
 				// Handle Errors here.
 				//var errorCode = error.code;
 				var errorMessage = error.message;
-				console.log(errorMessage);
+				console.log("server.js error: " + errorMessage);
 				response = errorMessage;
 			});
+		//if no error then
 		if (!response) {
 			response = "1";
 		}
-		console.log(response);
+		console.log("server.js responds: " + response);
 		res.send(response);
 		//login process
 	} catch (e) {

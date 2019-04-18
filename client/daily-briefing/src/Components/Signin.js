@@ -98,6 +98,9 @@ class Signin extends Component {
 		} else {
 			// this.props.dispatch(changePage("Loading"));
 			this.props.userEmailLogin(this.state.username, this.state.password)
+
+			this.setState({ userNotFoundWarning: true })
+			return this.state.userNotFoundWarning
 		}
 	}
 
@@ -232,11 +235,11 @@ class Signin extends Component {
 					onClose={() => this.handleUserNotFoundWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"User Not Found!"}
+						{"Credentials Incorrect!"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							The attempted login request has been denied.
+							The attempted login request has been denied. Please check your email or password.
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>

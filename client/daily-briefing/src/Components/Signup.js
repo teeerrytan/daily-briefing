@@ -12,8 +12,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import classNames from "classnames";
 import Header from "./Header";
-import { changePage } from "../Actions/actions";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
 	signin: {
@@ -53,68 +53,69 @@ class Signup extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			warning1: false,
-			warning2: false,
-			warning3: false,
-			warning4: false,
+			apiFailDialog: false,
+			passwordEmptyDialog: false,
+			passwordDiffDialog: false,
+			successDialog: false,
 			username: "",
 			password1: "",
-			password2: ""
+			password2: "",
+			loading: false,
+			response: "",
+			redirectToSignin: false
 		};
 	}
 
-	handleSignup() {
+	async handleSignup() {
 		let username = this.state.username;
 		let password1 = this.state.password1;
 		let password2 = this.state.password2;
-		let response;
 		if (username === "") {
-			this.setState({ warning1: true });
+			this.setState({ apiFailDialog: true });
 			return;
 		} else if (password1 === "" || password2 === "") {
-			this.setState({ warning2: true });
+			this.setState({ passwordEmptyDialog: true });
 			return;
 		} else if (password1 !== password2) {
-			this.setState({ warning3: true });
+			this.setState({ passwordDiffDialog: true });
 			return;
 		} else {
+			this.setState({ loading: true });
 			//get the response from the sign up function
-			response = this.props.userSignup(
+			const response = await this.props.userSignup(
 				this.state.username,
 				this.state.password1
 			);
+
+			console.log("signin response is: " + response);
+			this.setState({ response: response });
+			//if not "1" which means unsuccessful login, then pop warning page and redirect back to signin page
+			if (response !== "1") {
+				this.setState({ apiFailDialog: true, loading: false });
+			} else {
+				this.setState({ successDialog: true });
+			}
 		}
-		console.log("signup page: " + response);
-		//if not "1" which means unsuccessful Signup, then pop warning page and redirect to signup page
-		if (response !== "1") {
-			//there is error
-			this.setState({ warning1: true });
-			this.props.dispatch(changePage("Signup"));
-		} else {
-			//success
-			this.setState({ warning4: true });
-		}
 	}
 
-	handleWarning1Close() {
-		this.setState({ warning1: false });
+	handleapiFailDialogClose() {
+		this.setState({ apiFailDialog: false });
 	}
 
-	handleWarning2Close() {
-		this.setState({ warning2: false });
+	handlepasswordEmptyDialogClose() {
+		this.setState({ passwordEmptyDialog: false });
 	}
 
-	handleWarning3Close() {
-		this.setState({ warning3: false });
+	handlepasswordDiffDialogClose() {
+		this.setState({ passwordDiffDialog: false });
 	}
 
-	handleWarning4Close() {
-		this.setState({ warning4: false });
-		this.props.dispatch(changePage("Signin"));
+	handlesuccessDialogClose() {
+		this.setState({ successDialog: false, redirectToSignin: true });
 	}
 
 	handleCancel() {
-		this.props.dispatch(changePage("Signin"));
+		this.setState({ redirectToSignin: true });
 	}
 
 	handleChange = e => {
@@ -138,6 +139,30 @@ class Signup extends Component {
 		// 		fontSize: "14px"
 		// 	})
 		// };
+		if (this.state.redirectToSignin) {
+			return <Redirect to="/signin" />;
+		}
+
+		if (this.state.loading) {
+			return (
+				<div className="loading" style={{ textAlign: "center" }}>
+					<Header className="logo" />
+					<div style={{ height: "200px" }} />
+					<div className="sk-cube-grid">
+						<div className="sk-cube sk-cube1" />
+						<div className="sk-cube sk-cube2" />
+						<div className="sk-cube sk-cube3" />
+						<div className="sk-cube sk-cube4" />
+						<div className="sk-cube sk-cube5" />
+						<div className="sk-cube sk-cube6" />
+						<div className="sk-cube sk-cube7" />
+						<div className="sk-cube sk-cube8" />
+						<div className="sk-cube sk-cube9" />
+					</div>
+					<div className="contentMainHeader">Loading...</div>
+				</div>
+			);
+		}
 
 		return (
 			<div className="Signup">
@@ -197,21 +222,20 @@ class Signup extends Component {
 
 				{/* username empty warning */}
 				<Dialog
-					open={this.state.warning1}
-					onClose={() => this.handleWarning1Close()}
+					open={this.state.apiFailDialog}
+					onClose={() => this.handleapiFailDialogClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your input!"}
+						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							Username cannot be empty or the email address is
-							already in use by another account!
+							{this.state.response}
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handleWarning1Close()}
+							onClick={() => this.handleapiFailDialogClose()}
 							color="primary"
 						>
 							OK
@@ -221,11 +245,11 @@ class Signup extends Component {
 
 				{/* password empty warning */}
 				<Dialog
-					open={this.state.warning2}
-					onClose={() => this.handleWarning2Close()}
+					open={this.state.passwordEmptyDialog}
+					onClose={() => this.handlepasswordEmptyDialogClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your input!"}
+						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
@@ -234,7 +258,9 @@ class Signup extends Component {
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handleWarning2Close()}
+							onClick={() =>
+								this.handlepasswordEmptyDialogClose()
+							}
 							color="primary"
 						>
 							OK
@@ -244,11 +270,11 @@ class Signup extends Component {
 
 				{/* password not same warning */}
 				<Dialog
-					open={this.state.warning3}
-					onClose={() => this.handleWarning3Close()}
+					open={this.state.passwordDiffDialog}
+					onClose={() => this.handlepasswordDiffDialogClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your input!"}
+						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
@@ -257,7 +283,7 @@ class Signup extends Component {
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handleWarning3Close()}
+							onClick={() => this.handlepasswordDiffDialogClose()}
 							color="primary"
 						>
 							OK
@@ -267,8 +293,8 @@ class Signup extends Component {
 
 				{/* Sign up Successful */}
 				<Dialog
-					open={this.state.warning4}
-					onClose={() => this.handleWarning4Close()}
+					open={this.state.successDialog}
+					onClose={() => this.handlesuccessDialogClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
 						{"Success"}
@@ -280,7 +306,7 @@ class Signup extends Component {
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handleWarning4Close()}
+							onClick={() => this.handlesuccessDialogClose()}
 							color="primary"
 						>
 							OK

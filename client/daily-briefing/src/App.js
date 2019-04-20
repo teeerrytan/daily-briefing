@@ -59,32 +59,36 @@ class App extends Component {
 		}
 	};
 
-	signInWithGoogle = () => {
-		const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-		auth.signInWithPopup(googleAuthProvider)
-			.then(data => {
-				console.log(data);
-				//update store
-				// this.setState({
-				// 	photoURL: data.user.photoURL,
-				// 	displayName: data.user.displayName,
-				// 	email: data.user.email
-				// });
-				const state = {
-					user: {
-						photoURL: data.user.photoURL,
-						displayName: data.user.displayName,
-						email: data.user.email
-					},
-					auth: true
-				};
-
-				this.props.dispatch(login(state));
-				//update store
-			})
+	signInWithGoogle = async () => {
+		const googleAuthProvider = await new firebase.auth.GoogleAuthProvider();
+		let success = true;
+		const data = await auth
+			.signInWithPopup(googleAuthProvider)
 			.catch(error => {
 				console.log(error);
+				success = false;
 			});
+
+		console.log(data);
+		//update store
+		// this.setState({
+		// 	photoURL: data.user.photoURL,
+		// 	displayName: data.user.displayName,
+		// 	email: data.user.email
+		// });
+		const state = {
+			user: {
+				photoURL: data.user.photoURL,
+				displayName: data.user.displayName,
+				email: data.user.email
+			},
+			auth: true
+		};
+
+		this.props.dispatch(login(state));
+		//update store
+		console.log("success is: " + success);
+		return success;
 	};
 
 	//email login
@@ -118,128 +122,68 @@ class App extends Component {
 		}
 	};
 
-	//Google login
-	userGoogleLogin() {
-		this.signInWithGoogle();
-		// Example postRequest with data. Replace static with form input.
-		// this.postRequest("/login/google", {
-		// 	temp: "Google"
-		// })
-		// 	.then(res => {
-		// 		//TODO: update store
-		// 		//TODO: user data process
-		// 		console.log("api answered!  " + res);
-		// 		return res;
-		// 	})
-		// 	.catch(err => console.log(err));
-	}
-
 	//sign up
-	userSignup = (username, password) => {
+	userSignup = async (username, password) => {
 		// Example postRequest with data. Replace static with form input
-		this.postRequest("/signup/email", {
+		const res = await this.postRequest("/signup/email", {
 			username: username,
 			password: password
-		})
-			.then(res => {
-				//don't do if else here, leave it for func in signup page
-				console.log("app.js returns " + res);
-				return res;
-			})
-			.catch(err => console.log(err));
+		}).catch(err => console.log(err));
+
+		console.log("app.js returns " + res);
+		return res;
 	};
 
 	render() {
 		return (
-			<div>
-				{/* switch (this.props.user.currentPage) {
-			case "Dashboard":
-				return (
-					<Dashboard
-						changePage={cur => this.changePage(cur)}
-						photoURL={this.state.photoURL}
-						displayName={this.state.displayName}
-						email={this.state.email}
-					/>
-				);
-			case "Signup":
-				return (
-					<Signup
-						userSignup={(username, password) =>
-							this.userSignup(username, password)
-						}
-					/>
-				);
-			case "Signin":
-				return (
-					<Signin
-						userEmailLogin={(username, password) =>
-							this.userEmailLogin(username, password)
-						}
-						userGoogleLogin={() => this.userGoogleLogin()}
-					/>
-				);
-			case "Loading":
-				return <Loading />;
-			default:
-				return (
-					<Signin
-						userEmailLogin={(username, password) =>
-							this.userEmailLogin(username, password)
-						}
-						userGoogleLogin={() => this.userGoogleLogin()}
-					/>
-				);
-		} */}
-				<Switch>
-					<Route
-						exact
-						path="/"
-						render={props => (
-							<Signin
-								userEmailLogin={(username, password) =>
-									this.userEmailLogin(username, password)
-								}
-								userGoogleLogin={() => this.userGoogleLogin()}
-							/>
-						)}
-					/>
-					<Route
-						path="/signin"
-						render={props => (
-							<Signin
-								userEmailLogin={(username, password) =>
-									this.userEmailLogin(username, password)
-								}
-								userGoogleLogin={() => this.userGoogleLogin()}
-							/>
-						)}
-					/>
-					<Route
-						path="/signup"
-						render={props => (
-							<Signup
-								userSignup={(username, password) =>
-									this.userSignup(username, password)
-								}
-							/>
-						)}
-					/>
-					<Route
-						path="/dashboard"
-						render={props => (
-							<Dashboard
-								changePage={cur => this.changePage(cur)}
-								photoURL={this.state.photoURL}
-								displayName={this.state.displayName}
-								email={this.state.email}
-							/>
-						)}
-					/>
-					<Route path="/loading" Component={Loading} />
-					<Route render={() => <div>Not Found</div>} />
-				</Switch>
-			</div>
+			<Switch>
+				<Route
+					exact
+					path="/"
+					render={props => (
+						<Signin
+							userEmailLogin={(username, password) =>
+								this.userEmailLogin(username, password)
+							}
+							signInWithGoogle={() => this.signInWithGoogle()}
+						/>
+					)}
+				/>
+				<Route
+					path="/signin"
+					render={props => (
+						<Signin
+							userEmailLogin={(username, password) =>
+								this.userEmailLogin(username, password)
+							}
+							signInWithGoogle={() => this.signInWithGoogle()}
+						/>
+					)}
+				/>
+				<Route
+					path="/signup"
+					render={props => (
+						<Signup
+							userSignup={(username, password) =>
+								this.userSignup(username, password)
+							}
+						/>
+					)}
+				/>
+				<Route
+					path="/dashboard"
+					render={props => (
+						<Dashboard
+							changePage={cur => this.changePage(cur)}
+							photoURL={this.state.photoURL}
+							displayName={this.state.displayName}
+							email={this.state.email}
+						/>
+					)}
+				/>
+				<Route path="/loading" Component={Loading} />
+				<Route render={() => <div>Not Found</div>} />
+			</Switch>
 		);
 	}
 }

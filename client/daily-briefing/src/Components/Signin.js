@@ -12,7 +12,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import classNames from "classnames";
 import Header from "./Header";
-import { changePage } from "../Actions/actions";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
@@ -61,7 +60,8 @@ class Signin extends Component {
 			password: "",
 			loading: false,
 			redirect: false,
-			response: ""
+			response: "",
+			redirectToSignup: false
 		};
 	}
 
@@ -89,7 +89,7 @@ class Signin extends Component {
 	};
 
 	handleSignup() {
-		this.props.dispatch(changePage("Signup"));
+		this.setState({ redirectToSignup: true });
 	}
 
 	async handleSignin() {
@@ -101,8 +101,6 @@ class Signin extends Component {
 			return this.state.passwordEmptyWarning;
 		} else {
 			this.setState({ loading: true });
-			//show the loading page firstly
-			this.props.dispatch(changePage("Loading"));
 
 			//get the response from the emailLogin function
 			const response = await this.props.userEmailLogin(
@@ -120,11 +118,24 @@ class Signin extends Component {
 		}
 	}
 
+	async GoogleLogin() {
+		const res = await this.props.signInWithGoogle();
+		console.log("res is: " + res);
+		if (res) {
+			this.setState({
+				redirect: true
+			});
+		}
+	}
+
 	render() {
 		const { classes } = this.props;
 		console.log("signin page states: \n", this.state);
 		if (this.state.redirect) {
 			return <Redirect to="/dashboard" />;
+		}
+		if (this.state.redirectToSignup) {
+			return <Redirect to="/signup" />;
 		}
 		if (this.state.loading) {
 			return (
@@ -198,7 +209,7 @@ class Signin extends Component {
 						color="primary"
 						className={classNames(classes.signin)}
 						id="sign-in"
-						onClick={() => this.props.userGoogleLogin()}
+						onClick={() => this.GoogleLogin()}
 					>
 						Sign in with Google
 					</Button>
@@ -224,7 +235,7 @@ class Signin extends Component {
 					onClose={() => this.handleUsernameEmptyWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your Username!"}
+						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
@@ -249,7 +260,7 @@ class Signin extends Component {
 					onClose={() => this.handlePasswordEmptyWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Please Check Your Password!"}
+						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>

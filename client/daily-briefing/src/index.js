@@ -5,6 +5,7 @@ import App from "./App";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducers from "./Reducers/index";
+import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 
 //public store for everything
@@ -29,7 +30,9 @@ store.subscribe(() => {
 // store.dispatch(login(payload));
 render(
 	<Provider store={store}>
-		<App />
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
 	</Provider>,
 	document.getElementById("root")
 );

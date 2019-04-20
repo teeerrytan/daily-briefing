@@ -14,6 +14,7 @@ import classNames from "classnames";
 import Header from "./Header";
 import { changePage } from "../Actions/actions";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
 	signin: {
@@ -57,7 +58,10 @@ class Signin extends Component {
 			passwordEmptyWarning: false,
 			userNotFoundWarning: false,
 			username: "",
-			password: ""
+			password: "",
+			loading: false,
+			redirect: false,
+			response: ""
 		};
 	}
 
@@ -70,7 +74,7 @@ class Signin extends Component {
 	}
 
 	handleUserNotFoundWarningClose() {
-		this.setState({ userNotFoundWarning: false });
+		this.setState({ userNotFoundWarning: false, loading: false });
 	}
 
 	handleChange = e => {
@@ -88,7 +92,7 @@ class Signin extends Component {
 		this.props.dispatch(changePage("Signup"));
 	}
 
-	handleSignin() {
+	async handleSignin() {
 		if (this.state.username === "") {
 			this.setState({ usernameEmptyWarning: true });
 			return this.state.usernameEmptyWarning;
@@ -96,18 +100,22 @@ class Signin extends Component {
 			this.setState({ passwordEmptyWarning: true });
 			return this.state.passwordEmptyWarning;
 		} else {
+			this.setState({ loading: true });
 			//show the loading page firstly
 			this.props.dispatch(changePage("Loading"));
+
 			//get the response from the emailLogin function
-			const response = this.props.userEmailLogin(
+			const response = await this.props.userEmailLogin(
 				this.state.username,
 				this.state.password
 			);
+			console.log("signin response is: " + response);
+			this.setState({ response: response });
 			//if not "1" which means unsuccessful login, then pop warning page and redirect back to signin page
 			if (response !== "1") {
-				this.setState({ userNotFoundWarning: true });
-				this.props.dispatch(changePage("Signin"));
-				return this.state.userNotFoundWarning;
+				this.setState({ userNotFoundWarning: true, loading: false });
+			} else {
+				this.setState({ redirect: true });
 			}
 		}
 	}
@@ -115,6 +123,29 @@ class Signin extends Component {
 	render() {
 		const { classes } = this.props;
 		console.log("signin page states: \n", this.state);
+		if (this.state.redirect) {
+			return <Redirect to="/dashboard" />;
+		}
+		if (this.state.loading) {
+			return (
+				<div className="loading" style={{ textAlign: "center" }}>
+					<Header className="logo" />
+					<div style={{ height: "200px" }} />
+					<div className="sk-cube-grid">
+						<div className="sk-cube sk-cube1" />
+						<div className="sk-cube sk-cube2" />
+						<div className="sk-cube sk-cube3" />
+						<div className="sk-cube sk-cube4" />
+						<div className="sk-cube sk-cube5" />
+						<div className="sk-cube sk-cube6" />
+						<div className="sk-cube sk-cube7" />
+						<div className="sk-cube sk-cube8" />
+						<div className="sk-cube sk-cube9" />
+					</div>
+					<div className="contentMainHeader">Loading...</div>
+				</div>
+			);
+		}
 		return (
 			<div className="Signin">
 				<Header className="logo" />
@@ -247,8 +278,7 @@ class Signin extends Component {
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							The attempted login request has been denied. Please
-							check your email or password.
+							{this.state.response}
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>

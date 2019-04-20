@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { login } from "./Actions/actions";
 import Loading from "./Components/Loading";
 import Dashboard from "./Components/Dashboard";
+import { Switch, Route } from "react-router-dom";
 
 var config = {
 	apiKey: "AIzaSyAqc38N6jHL-tIb1lMTczQbqTnWFtZ8QYY",
@@ -87,43 +88,34 @@ class App extends Component {
 	};
 
 	//email login
-	userEmailLogin = (username, password) => {
+	userEmailLogin = async (username, password) => {
 		// Example postRequest with data. Replace static with form input.
-		this.postRequest("/login/email", {
+		const res = await this.postRequest("/login/email", {
 			username: username,
 			password: password
-		})
-			.then(res => {
-				console.log(res);
-				if (res == "1") {
-					//TODO: update store
-					console.log("got here");
-					//change page
-					this.setState({
-						APISuccess: true
-					});
-					const state = {
-						user: {
-							photoURL:
-								"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
-							displayName: username,
-							email: username
-						},
-						auth: true
-					};
+		}).catch(err => console.log(err));
 
-					this.props.dispatch(login(state));
-					return res;
-				} else {
-					this.setState({
-						APISuccess: false
-					});
-					return res;
-				}
-				//TODO: user data process
-				console.log("api answered!" + res);
-			})
-			.catch(err => console.log(err));
+		console.log(res);
+		if (res == "1") {
+			//TODO: update store
+			console.log("got here");
+			//change page
+
+			const state = {
+				user: {
+					photoURL:
+						"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
+					displayName: username,
+					email: username
+				},
+				auth: true
+			};
+
+			this.props.dispatch(login(state));
+			return "1";
+		} else {
+			return res;
+		}
 	};
 
 	//Google login
@@ -158,8 +150,9 @@ class App extends Component {
 	};
 
 	render() {
-		//switch page based on the value "currentPage" in store. Easier implementation than routers
-		switch (this.props.user.currentPage) {
+		return (
+			<div>
+				{/* switch (this.props.user.currentPage) {
 			case "Dashboard":
 				return (
 					<Dashboard
@@ -197,7 +190,57 @@ class App extends Component {
 						userGoogleLogin={() => this.userGoogleLogin()}
 					/>
 				);
-		}
+		} */}
+				<Switch>
+					<Route
+						exact
+						path="/"
+						render={props => (
+							<Signin
+								userEmailLogin={(username, password) =>
+									this.userEmailLogin(username, password)
+								}
+								userGoogleLogin={() => this.userGoogleLogin()}
+							/>
+						)}
+					/>
+					<Route
+						path="/signin"
+						render={props => (
+							<Signin
+								userEmailLogin={(username, password) =>
+									this.userEmailLogin(username, password)
+								}
+								userGoogleLogin={() => this.userGoogleLogin()}
+							/>
+						)}
+					/>
+					<Route
+						path="/signup"
+						render={props => (
+							<Signup
+								userSignup={(username, password) =>
+									this.userSignup(username, password)
+								}
+							/>
+						)}
+					/>
+					<Route
+						path="/dashboard"
+						render={props => (
+							<Dashboard
+								changePage={cur => this.changePage(cur)}
+								photoURL={this.state.photoURL}
+								displayName={this.state.displayName}
+								email={this.state.email}
+							/>
+						)}
+					/>
+					<Route path="/loading" Component={Loading} />
+					<Route render={() => <div>Not Found</div>} />
+				</Switch>
+			</div>
+		);
 	}
 }
 

@@ -1,8 +1,6 @@
 const express = require("express");
 var cookieParser = require("cookie-parser");
-var session = require("express-session");
-var redis = require("redis");
-var RedisStore = require("connect-redis")(session);
+var cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const firebase = require("firebase");
 const config = require("./firebaseKey.json");
@@ -13,9 +11,6 @@ firebase.initializeApp(config);
 
 var auth = firebase.auth();
 var provider = new firebase.auth.GoogleAuthProvider();
-var redisClient = redis.createClient(6379, "127.0.0.1", {
-	auth_pass: "password"
-});
 
 //setting up middleware for retrieving data from front-end
 const app = express();
@@ -31,12 +26,12 @@ app.use(bodyParser.json());
 //save session information in redis store
 app.use(cookieParser("sessiontest"));
 app.use(
-	session({
-		store: new RedisStore({ client: redisClient }),
-		cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
-		secret: "password",
-		resave: false,
-		saveUninitialized: false
+	cookieSession({
+		name: "session",
+		keys: ["daily-breifing"],
+
+		// Cookie Options
+		maxAge: 24 * 60 * 60 * 1000 // 24 hours
 	})
 );
 
@@ -101,7 +96,7 @@ app.post("/login/email", async (req, res) => {
 				password: password
 			};
 			let response;
-			req.session.user = user;
+
 			await auth
 				.signInWithEmailAndPassword(username, password)
 				.catch(error => {
@@ -114,6 +109,7 @@ app.post("/login/email", async (req, res) => {
 			//if no error then
 			if (!response) {
 				response = "1";
+				req.session.user = user;
 			}
 			console.log("server.js responds: " + response);
 			res.send(response);

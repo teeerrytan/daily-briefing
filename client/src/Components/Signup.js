@@ -172,6 +172,7 @@ class Signup extends Component {
 					<TextField
 						className="Standard-input"
 						label="Email:"
+						required
 						type="search"
 						margin="normal"
 						id="username"
@@ -181,6 +182,7 @@ class Signup extends Component {
 					<TextField
 						className="Standard-input"
 						label="Password:"
+						required
 						type="password"
 						autoComplete="current-password"
 						margin="normal"
@@ -191,6 +193,7 @@ class Signup extends Component {
 					<TextField
 						className="Standard-input"
 						label="Confirm Password:"
+						required
 						type="password"
 						autoComplete="current-password"
 						margin="normal"

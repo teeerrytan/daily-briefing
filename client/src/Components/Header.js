@@ -4,7 +4,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { connect } from "react-redux";
-import { logout } from "../Actions/actions";
+import { logout, login } from "../Actions/actions";
 import { Redirect } from "react-router-dom";
 
 class Header extends Component {
@@ -18,8 +18,48 @@ class Header extends Component {
 			},
 			anchorEl: null,
 			auth: this.props.user.auth,
-			logout: false
+			logout: false,
+			page: this.props.page
 		};
+	}
+
+	componentDidMount() {
+		if (!this.props.user.auth) {
+			if (localStorage.getItem("displayName")) {
+				const state = {
+					user: {
+						photoURL: localStorage.getItem("photoURL"),
+						displayName: localStorage.getItem("displayName"),
+						email: localStorage.getItem("email")
+					},
+					auth: localStorage.getItem("auth")
+				};
+				this.props.dispatch(login(state));
+				this.setState({
+					user: {
+						photoURL: localStorage.getItem("photoURL"),
+						displayName: localStorage.getItem("displayName"),
+						email: localStorage.getItem("email")
+					},
+					auth: localStorage.getItem("auth")
+				});
+				console.log("auth now", this.state.auth);
+			} else {
+				if (this.state.page === "dashboard") {
+					alert("Please sign in.");
+					this.setState({ logout: true });
+				}
+			}
+		} else {
+			this.setState({
+				user: {
+					photoURL: this.props.user.user.photoURL,
+					displayName: this.props.user.user.displayName,
+					email: this.props.user.user.email
+				},
+				auth: this.props.user.auth
+			});
+		}
 	}
 
 	handleMenu = event => {
@@ -31,6 +71,7 @@ class Header extends Component {
 	};
 
 	handleExit = () => {
+		localStorage.clear();
 		this.props.dispatch(logout());
 		this.setState({ logout: true });
 	};

@@ -78,7 +78,7 @@ class App extends Component {
 			},
 			auth: true
 		};
-
+		this.saveState(state);
 		this.props.dispatch(login(state));
 		console.log("success content is: " + success);
 		return success;
@@ -105,6 +105,8 @@ class App extends Component {
 				auth: true
 			};
 
+			this.saveState(state);
+
 			this.props.dispatch(login(state));
 			return "1";
 		} else {
@@ -120,6 +122,15 @@ class App extends Component {
 			password: password
 		}).catch(err => console.log(err));
 		return res;
+	};
+
+	saveState = state => {
+		localStorage.setItem("displayName", state.user.displayName);
+		localStorage.setItem("email", state.user.email);
+		localStorage.setItem("photoURL", state.user.photoURL);
+		localStorage.setItem("auth", state.auth);
+
+		return;
 	};
 
 	render() {

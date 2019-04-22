@@ -61,6 +61,7 @@ class Dashboard extends Component {
 					photoURL={this.state.photoURL}
 					displayName={this.state.displayName}
 					email={this.state.email}
+					page="dashboard"
 				/>
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> DashBoard </p>

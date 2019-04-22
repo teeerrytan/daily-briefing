@@ -8,16 +8,10 @@ import { connect } from "react-redux";
 import { login } from "./Actions/actions";
 import Loading from "./Components/Loading";
 import Dashboard from "./Components/Dashboard";
+import NotFound from "./Components/NotFound";
 import { Switch, Route } from "react-router-dom";
+const config = require("./firebaseKey.json");
 
-var config = {
-	apiKey: "AIzaSyAqc38N6jHL-tIb1lMTczQbqTnWFtZ8QYY",
-	authDomain: "daily-briefing-6b6e2.firebaseapp.com",
-	databaseURL: "https://daily-briefing-6b6e2.firebaseio.com",
-	projectId: "daily-briefing-6b6e2",
-	storageBucket: "daily-briefing-6b6e2.appspot.com",
-	messagingSenderId: "534149453117"
-};
 firebase.initializeApp(config);
 
 const auth = firebase.auth();
@@ -29,7 +23,7 @@ class App extends Component {
 		this.state = {};
 	}
 	componentDidMount() {
-		this.setState({ currentPage: this.props.currentPage });
+		// this.setState({ currentPage: this.props.currentPage });
 	}
 
 	//universal http interface
@@ -86,8 +80,7 @@ class App extends Component {
 		};
 
 		this.props.dispatch(login(state));
-		//update store
-		console.log("success is: " + success);
+		console.log("success content is: " + success);
 		return success;
 	};
 
@@ -101,10 +94,7 @@ class App extends Component {
 
 		console.log(res);
 		if (res == "1") {
-			//TODO: update store
 			console.log("got here");
-			//change page
-
 			const state = {
 				user: {
 					photoURL:
@@ -129,8 +119,6 @@ class App extends Component {
 			username: username,
 			password: password
 		}).catch(err => console.log(err));
-
-		console.log("app.js returns " + res);
 		return res;
 	};
 
@@ -182,7 +170,7 @@ class App extends Component {
 					)}
 				/>
 				<Route path="/loading" Component={Loading} />
-				<Route render={() => <div>Not Found</div>} />
+				<Route render={() => <NotFound />} />
 			</Switch>
 		);
 	}

@@ -1,4 +1,8 @@
 const express = require("express");
+var cookieParser = require("cookie-parser");
+var session = require("express-session");
+var redis = require("redis");
+var RedisStore = require("connect-redis")(session);
 const bodyParser = require("body-parser");
 const firebase = require("firebase");
 const config = require("./firebaseKey.json");
@@ -9,6 +13,9 @@ firebase.initializeApp(config);
 
 var auth = firebase.auth();
 var provider = new firebase.auth.GoogleAuthProvider();
+var redisClient = redis.createClient(6379, "127.0.0.1", {
+	auth_pass: "password"
+});
 
 //setting up middleware for retrieving data from front-end
 const app = express();
@@ -21,8 +28,17 @@ app.use(
 
 app.use(bodyParser.json());
 
-//log that server is up and running
-app.listen(port, () => console.log(`Server is listening on port ${port}...`));
+//save session information in redis store
+app.use(cookieParser("sessiontest"));
+app.use(
+	session({
+		store: new RedisStore({ client: redisClient }),
+		cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
+		secret: "password",
+		resave: false,
+		saveUninitialized: false
+	})
+);
 
 //post and get
 //sign up
@@ -57,26 +73,52 @@ app.post("/signup/email", async (req, res) => {
 //email login
 app.post("/login/email", async (req, res) => {
 	try {
-		const username = req.body.username;
-		const password = req.body.password;
-		let response;
-
-		await auth
-			.signInWithEmailAndPassword(username, password)
-			.catch(error => {
-				// Handle Errors here.
-				//var errorCode = error.code;
-				var errorMessage = error.message;
-				console.log("server.js error: " + errorMessage);
-				response = errorMessage;
-			});
-		//if no error then
-		if (!response) {
-			response = "1";
+		if (req.session.user) {
+			var user = req.session.user;
+			var username = user.username;
+			var password = user.password;
+			let response;
+			await auth
+				.signInWithEmailAndPassword(username, password)
+				.catch(error => {
+					// Handle Errors here.
+					//var errorCode = error.code;
+					var errorMessage = error.message;
+					console.log("server.js error: " + errorMessage);
+					response = errorMessage;
+				});
+			//if no error then
+			if (!response) {
+				response = "1";
+			}
+			console.log("server.js responds: " + response);
+			res.send(response);
+		} else {
+			const username = req.body.username;
+			const password = req.body.password;
+			let user = {
+				username: username,
+				password: password
+			};
+			let response;
+			req.session.user = user;
+			await auth
+				.signInWithEmailAndPassword(username, password)
+				.catch(error => {
+					// Handle Errors here.
+					//var errorCode = error.code;
+					var errorMessage = error.message;
+					console.log("server.js error: " + errorMessage);
+					response = errorMessage;
+				});
+			//if no error then
+			if (!response) {
+				response = "1";
+			}
+			console.log("server.js responds: " + response);
+			res.send(response);
+			//login process
 		}
-		console.log("server.js responds: " + response);
-		res.send(response);
-		//login process
 	} catch (e) {
 		res.sendStatus(400);
 	}
@@ -112,3 +154,11 @@ app.post("/login/google", async (req, res) => {
 		res.sendStatus(400).send(e);
 	}
 });
+
+app.use(function(err, req, res, next) {
+	console.error(err.stack);
+	res.status(500).render("error");
+});
+
+//log that server is up and running
+app.listen(port, () => console.log(`Server is listening on port ${port}...`));

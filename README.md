@@ -10,6 +10,22 @@ get firebaseKet.json
 
 //intsll Yarn, skip if already installed
 brew install yarn
+
+//install Redis store for saving sessions.
+brew install redis
+
+//launch redis
+redis-server
+
+//shut down redis
+redis 127.0.0.1:6379> SHUTDOWN
+
+//connect to redis
+redis-cli -h 127.0.0.1 /*ip*/ -p 6379 /*port*/
+
+//quit current redis conversation
+127.0.0.1:6379> quit
+
 ```
 
 1. :rocket: Launch backend

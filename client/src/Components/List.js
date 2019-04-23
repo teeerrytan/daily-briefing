@@ -15,6 +15,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import Item from "./Item";
 import AddItem from "./AddItem";
@@ -49,7 +54,8 @@ class FolderList extends React.Component {
 			contents: [],
 			open: false,
 			fullWidth: true,
-			maxWidth: "md"
+			maxWidth: "sm",
+			category: ""
 		};
 	}
 
@@ -102,6 +108,10 @@ class FolderList extends React.Component {
 		this.setState({ open: false });
 	};
 
+	handleSelectChange = e => {
+		this.setState({ category: e.target.value });
+	};
+
 	render() {
 		const { classes } = this.props;
 		return (
@@ -151,6 +161,32 @@ class FolderList extends React.Component {
 									shrink: true
 								}}
 							/>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink htmlFor="category">
+									Category
+								</InputLabel>
+								<Select
+									value={this.state.category}
+									onChange={this.handleSelectChange}
+									input={
+										<Input name="category" id="category" />
+									}
+									displayEmpty
+									name="category"
+									className={classes.selectEmpty}
+								>
+									<MenuItem value="">
+										<em>None</em>
+									</MenuItem>
+									<MenuItem value={"supervisor_account"}>
+										Family
+									</MenuItem>
+									<MenuItem value={"work"}>Work</MenuItem>
+									<MenuItem value={"local_activity"}>
+										Other
+									</MenuItem>
+								</Select>
+							</FormControl>
 						</DialogContent>
 						<DialogActions>
 							<Button

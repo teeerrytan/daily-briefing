@@ -25,15 +25,12 @@ class FolderList extends React.Component {
 		this.state = {
 			icon: "playlist_add",
 			title: "Add another appointment",
-			subTitle: "Date & Time",
-			result: "Crawling Result"
+			subTitle: "Date & Time"
 		};
 	}
 
 	render() {
 		const { classes } = this.props;
-		console.log(this.state);
-
 		return (
 			<div>
 				<ListItem button onClick={() => this.props.handleAddOpen()}>

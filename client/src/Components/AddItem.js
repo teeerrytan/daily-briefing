@@ -25,14 +25,10 @@ class FolderList extends React.Component {
 		this.state = {
 			icon: "playlist_add",
 			title: "Add another appointment",
-			subTitle: "Time & Date",
+			subTitle: "Date & Time",
 			result: "Crawling Result"
 		};
 	}
-
-	handleClick = () => {
-		//add item
-	};
 
 	render() {
 		const { classes } = this.props;
@@ -40,7 +36,7 @@ class FolderList extends React.Component {
 
 		return (
 			<div>
-				<ListItem button onClick={this.handleClick}>
+				<ListItem button onClick={() => this.props.handleAddOpen()}>
 					<Avatar className={classes.pinkAvatar}>
 						<MaterialIcon icon={this.state.icon} />
 					</Avatar>

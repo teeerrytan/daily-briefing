@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
 const express = require("express");
 var cookieParser = require("cookie-parser");
 var cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const firebase = require("firebase");
 const config = require("./firebaseKey.json");
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 5000;
 
 //initialize firebase
@@ -151,7 +153,7 @@ app.post("/login/google", async (req, res) => {
 	}
 });
 
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
 	console.error(err.stack);
 	res.status(500).render("error");
 });

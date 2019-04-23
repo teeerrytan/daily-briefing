@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import {
+	withStyles,
+	MuiThemeProvider,
+	createMuiTheme
+} from "@material-ui/core/styles";
 import "./Signup.css";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -47,6 +51,13 @@ const styles = theme => ({
 		fontSize: 18,
 		color: "black"
 	}
+});
+
+const theme = createMuiTheme({
+	palette: {
+		primary: blueGrey
+	},
+	typography: { useNextVariants: true }
 });
 
 class Signup extends Component {
@@ -169,58 +180,60 @@ class Signup extends Component {
 				<Header className="logo" />
 				<header className="Signup-header">
 					<p className="signup-title"> Sign Up </p>
-					<TextField
-						className="Standard-input"
-						label="Email:"
-						required
-						type="search"
-						margin="normal"
-						id="username"
-						name="username"
-						onChange={e => this.handleChange(e)}
-					/>
-					<TextField
-						className="Standard-input"
-						label="Password:"
-						required
-						type="password"
-						autoComplete="current-password"
-						margin="normal"
-						id="password1"
-						name="password1"
-						onChange={e => this.handleChange(e)}
-					/>
-					<TextField
-						className="Standard-input"
-						label="Confirm Password:"
-						required
-						type="password"
-						autoComplete="current-password"
-						margin="normal"
-						id="password2"
-						name="password2"
-						onChange={e => this.handleChange(e)}
-					/>
+					<MuiThemeProvider theme={theme}>
+						<TextField
+							className="Standard-input"
+							label="Email:"
+							required
+							type="search"
+							margin="normal"
+							id="username"
+							name="username"
+							onChange={e => this.handleChange(e)}
+						/>
+						<TextField
+							className="Standard-input"
+							label="Password:"
+							required
+							type="password"
+							autoComplete="current-password"
+							margin="normal"
+							id="password1"
+							name="password1"
+							onChange={e => this.handleChange(e)}
+						/>
+						<TextField
+							className="Standard-input"
+							label="Confirm Password:"
+							required
+							type="password"
+							autoComplete="current-password"
+							margin="normal"
+							id="password2"
+							name="password2"
+							onChange={e => this.handleChange(e)}
+						/>
 
-					<Button
-						variant="contained"
-						color="primary"
-						id="submit"
-						onClick={() => this.handleSignup()}
-						className={classNames(classes.signin)}
-					>
-						Submit
-					</Button>
+						<Button
+							variant="contained"
+							color="primary"
+							id="submit"
+							onClick={() => this.handleSignup()}
+							className={classNames(classes.signin)}
+						>
+							Submit
+						</Button>
 
-					<Button
-						variant="contained"
-						color="secondary"
-						id="cancel"
-						onClick={() => this.handleCancel()}
-						className={classNames(classes.signup)}
-					>
-						Cancel
-					</Button>
+						<Button
+							variant="contained"
+							color="secondary"
+							id="cancel"
+							onClick={() => this.handleCancel()}
+							className={classNames(classes.signup)}
+						>
+							Cancel
+						</Button>
+					</MuiThemeProvider>
 				</header>
 
 				{/* username empty warning */}

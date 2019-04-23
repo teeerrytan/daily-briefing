@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import {
+	withStyles,
+	MuiThemeProvider,
+	createMuiTheme
+} from "@material-ui/core/styles";
 import "./Signin.css";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -47,6 +51,13 @@ const styles = theme => ({
 		fontSize: 18,
 		color: "black"
 	}
+});
+
+const theme = createMuiTheme({
+	palette: {
+		primary: blueGrey
+	},
+	typography: { useNextVariants: true }
 });
 
 class Signin extends Component {
@@ -130,7 +141,6 @@ class Signin extends Component {
 
 	render() {
 		const { classes } = this.props;
-		console.log("signin page states: \n", this.state);
 		if (this.state.redirect) {
 			return <Redirect to="/dashboard" />;
 		}
@@ -162,71 +172,73 @@ class Signin extends Component {
 				<Header className="logo" />
 				<header className="Signin-header">
 					<p className="signin-title"> Sign In </p>
-					<TextField
-						className="Standard-input"
-						label="Email:"
-						type="search"
-						margin="normal"
-						id="username"
-						style={{
-							width: "300px"
-						}}
-						name="username"
-						required
-						onChange={e => this.handleChange(e)}
-					/>
-					<div className="Password">
+					<MuiThemeProvider theme={theme}>
 						<TextField
 							className="Standard-input"
-							label="Password:"
-							type="password"
-							autoComplete="current-password"
+							label="Email:"
+							type="search"
 							margin="normal"
-							id="password"
+							id="username"
 							style={{
 								width: "300px"
 							}}
-							name="password"
+							name="username"
 							required
 							onChange={e => this.handleChange(e)}
 						/>
-						{/* <p>Forgot Password</p> */}
-					</div>
-					<Button
-						variant="contained"
-						color="primary"
-						className={classNames(classes.signin)}
-						id="sign-in"
-						onClick={() => this.handleSignin()}
-					>
-						Sign in
-					</Button>
-					<div id="sign-up-div">
-						<p id="sign-up-p">Or sign in with Google&trade;</p>
-					</div>
-					<Button
-						variant="contained"
-						color="primary"
-						className={classNames(classes.signin)}
-						id="sign-in"
-						onClick={() => this.GoogleLogin()}
-					>
-						Sign in with Google
-					</Button>
-					<div id="sign-up-div">
-						<p id="sign-up-p">Don't have an account yet?</p>
-					</div>
-					<div>
+						<div className="Password">
+							<TextField
+								className="Standard-input"
+								label="Password:"
+								type="password"
+								autoComplete="current-password"
+								margin="normal"
+								id="password"
+								style={{
+									width: "300px"
+								}}
+								name="password"
+								required
+								onChange={e => this.handleChange(e)}
+							/>
+							{/* <p>Forgot Password</p> */}
+						</div>
 						<Button
 							variant="contained"
-							color="secondary"
-							id="sign-up"
-							className={classNames(classes.signup)}
-							onClick={() => this.handleSignup()}
+							color="primary"
+							className={classNames(classes.signin)}
+							id="sign-in"
+							onClick={() => this.handleSignin()}
 						>
-							Sign up
+							Sign in
 						</Button>
-					</div>
+						<div id="sign-up-div">
+							<p id="sign-up-p">Or sign in with Google&trade;</p>
+						</div>
+						<Button
+							variant="contained"
+							color="primary"
+							className={classNames(classes.signin)}
+							id="sign-in"
+							onClick={() => this.GoogleLogin()}
+						>
+							Sign in with Google
+						</Button>
+						<div id="sign-up-div">
+							<p id="sign-up-p">Don't have an account yet?</p>
+						</div>
+						<div>
+							<Button
+								variant="contained"
+								color="secondary"
+								id="sign-up"
+								className={classNames(classes.signup)}
+								onClick={() => this.handleSignup()}
+							>
+								Sign up
+							</Button>
+						</div>
+					</MuiThemeProvider>
 				</header>
 
 				{/* username empty warning */}

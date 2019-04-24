@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import "./Dashboard.css";
 import blueGrey from "@material-ui/core/colors/blueGrey";
+import MaterialIcon from "@material/react-material-icon";
+import Fab from "@material-ui/core/Fab";
 import Header from "../Header/Header";
 import { connect } from "react-redux";
 import List from "../List/List";
@@ -38,6 +40,9 @@ const styles = theme => ({
 	dialogText: {
 		fontSize: 18,
 		color: "black"
+	},
+	margin: {
+		margin: theme.spacing.unit
 	}
 });
 
@@ -53,6 +58,7 @@ class Dashboard extends Component {
 	}
 
 	render() {
+		const { classes } = this.props;
 		console.log("Dashboard page states: \n", this.state);
 		return (
 			<div className="Dashboard">
@@ -67,6 +73,15 @@ class Dashboard extends Component {
 					<p className="Dashboard-title"> DashBoard </p>
 					<List />
 					<hr className="hr-main" />
+					<Fab
+						variant="extended"
+						color="primary"
+						aria-label="Add"
+						className={classes.margin}
+					>
+						<MaterialIcon icon="navigation" />
+						Send Eamil to Me
+					</Fab>
 				</header>
 			</div>
 		);

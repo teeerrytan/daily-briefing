@@ -21,8 +21,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import blueGrey from "@material-ui/core/colors/blueGrey";
-import Item from "./Item";
-import AddItem from "./AddItem";
+import Item from "../Item/Item";
+import AddItem from "../AddItem/AddItem";
 
 const styles = theme => ({
 	root: {

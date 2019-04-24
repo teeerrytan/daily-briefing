@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import "./App.css";
 import axios from "axios";
-import Signin from "./Components/Signin";
-import Signup from "./Components/Signup";
+import Signin from "./Components/Signin/Signin";
+import Signup from "./Components/Signup/Signup";
 import firebase from "firebase";
 import { connect } from "react-redux";
 import { login } from "./Actions/actions";
-import Loading from "./Components/Loading";
-import Dashboard from "./Components/Dashboard";
-import NotFound from "./Components/NotFound";
+import Loading from "./Components/Loading/Loading";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import NotFound from "./Components/NotFound/NotFound";
 import { Switch, Route } from "react-router-dom";
 const config = require("./firebaseKey.json");
 

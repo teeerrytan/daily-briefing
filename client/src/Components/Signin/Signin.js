@@ -5,7 +5,7 @@ import {
 	MuiThemeProvider,
 	createMuiTheme
 } from "@material-ui/core/styles";
-import "./Signup.css";
+import "./Signin.css";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,16 +15,16 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import classNames from "classnames";
-import Header from "./Header";
+import Header from "../Header/Header";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
 	signin: {
-		color: theme.palette.getContrastText(blueGrey[700]),
-		backgroundColor: blueGrey[500],
+		color: theme.palette.getContrastText(blueGrey[600]),
+		backgroundColor: blueGrey[700],
 		"&:hover": {
-			backgroundColor: blueGrey[700]
+			backgroundColor: blueGrey[900]
 		}
 	},
 	signup: {
@@ -60,100 +60,93 @@ const theme = createMuiTheme({
 	typography: { useNextVariants: true }
 });
 
-class Signup extends Component {
+class Signin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			apiFailDialog: false,
-			passwordEmptyDialog: false,
-			passwordDiffDialog: false,
-			successDialog: false,
+			usernameEmptyWarning: false,
+			passwordEmptyWarning: false,
+			userNotFoundWarning: false,
 			username: "",
-			password1: "",
-			password2: "",
+			password: "",
 			loading: false,
+			redirect: false,
 			response: "",
-			redirectToSignin: false
+			redirectToSignup: false
 		};
 	}
 
-	async handleSignup() {
-		let username = this.state.username;
-		let password1 = this.state.password1;
-		let password2 = this.state.password2;
-		if (username === "") {
-			this.setState({ apiFailDialog: true });
-			return;
-		} else if (password1 === "" || password2 === "") {
-			this.setState({ passwordEmptyDialog: true });
-			return;
-		} else if (password1 !== password2) {
-			this.setState({ passwordDiffDialog: true });
-			return;
-		} else {
-			this.setState({ loading: true });
-			//get the response from the sign up function
-			const response = await this.props.userSignup(
-				this.state.username,
-				this.state.password1
-			);
-
-			console.log("signin response is: " + response);
-			this.setState({ response: response });
-			//if not "1" which means unsuccessful login, then pop warning page and redirect back to signin page
-			if (response !== "1") {
-				this.setState({ apiFailDialog: true, loading: false });
-			} else {
-				this.setState({ successDialog: true });
-			}
-		}
+	handleUsernameEmptyWarningClose() {
+		this.setState({ usernameEmptyWarning: false });
 	}
 
-	handleapiFailDialogClose() {
-		this.setState({ apiFailDialog: false });
+	handlePasswordEmptyWarningClose() {
+		this.setState({ passwordEmptyWarning: false });
 	}
 
-	handlepasswordEmptyDialogClose() {
-		this.setState({ passwordEmptyDialog: false });
-	}
-
-	handlepasswordDiffDialogClose() {
-		this.setState({ passwordDiffDialog: false });
-	}
-
-	handlesuccessDialogClose() {
-		this.setState({ successDialog: false, redirectToSignin: true });
-	}
-
-	handleCancel() {
-		this.setState({ redirectToSignin: true });
+	handleUserNotFoundWarningClose() {
+		this.setState({ userNotFoundWarning: false, loading: false });
 	}
 
 	handleChange = e => {
 		this.setState({
 			[e.target.name]: e.target.value
 		});
+		//get input func
+		// const node = findDOMNode(this.refs.input);
+		// const text = node.value.trim();
+		// this.props.onAddClick(text);
+		// node.value = "";
 	};
 
-	render() {
-		console.log("signup page states: \n", this.state);
+	handleSignup() {
+		this.setState({ redirectToSignup: true });
+	}
 
-		const { classes } = this.props;
+	async handleSignin() {
+		if (this.state.username === "") {
+			this.setState({ usernameEmptyWarning: true });
+			return this.state.usernameEmptyWarning;
+		} else if (this.state.password === "") {
+			this.setState({ passwordEmptyWarning: true });
+			return this.state.passwordEmptyWarning;
+		} else {
+			this.setState({ loading: true });
 
-		// var selectorStyle = {
-		// 	control: base => ({
-		// 		...base,
-		// 		fontSize: "18px"
-		// 	}),
-		// 	menu: base => ({
-		// 		...base,
-		// 		fontSize: "14px"
-		// 	})
-		// };
-		if (this.state.redirectToSignin) {
-			return <Redirect to="/signin" />;
+			//get the response from the emailLogin function
+			const response = await this.props.userEmailLogin(
+				this.state.username,
+				this.state.password
+			);
+			console.log("signin response is: " + response);
+			this.setState({ response: response });
+			//if not "1" which means unsuccessful login, then pop warning page and redirect back to signin page
+			if (response !== "1") {
+				this.setState({ userNotFoundWarning: true, loading: false });
+			} else {
+				this.setState({ redirect: true });
+			}
 		}
+	}
 
+	async GoogleLogin() {
+		const res = await this.props.signInWithGoogle();
+		console.log("res is: " + res);
+		if (res) {
+			this.setState({
+				redirect: true
+			});
+		}
+	}
+
+	render() {
+		const { classes } = this.props;
+		if (this.state.redirect) {
+			return <Redirect to="/dashboard" />;
+		}
+		if (this.state.redirectToSignup) {
+			return <Redirect to="/signup" />;
+		}
 		if (this.state.loading) {
 			return (
 				<div className="loading" style={{ textAlign: "center" }}>
@@ -174,84 +167,98 @@ class Signup extends Component {
 				</div>
 			);
 		}
-
 		return (
-			<div className="Signup">
+			<div className="Signin">
 				<Header className="logo" />
-				<header className="Signup-header">
-					<p className="signup-title"> Sign Up </p>
+				<header className="Signin-header">
+					<p className="signin-title"> Sign In </p>
 					<MuiThemeProvider theme={theme}>
 						<TextField
 							className="Standard-input"
 							label="Email:"
-							required
 							type="search"
 							margin="normal"
 							id="username"
+							style={{
+								width: "300px"
+							}}
 							name="username"
-							onChange={e => this.handleChange(e)}
-						/>
-						<TextField
-							className="Standard-input"
-							label="Password:"
 							required
-							type="password"
-							autoComplete="current-password"
-							margin="normal"
-							id="password1"
-							name="password1"
 							onChange={e => this.handleChange(e)}
 						/>
-						<TextField
-							className="Standard-input"
-							label="Confirm Password:"
-							required
-							type="password"
-							autoComplete="current-password"
-							margin="normal"
-							id="password2"
-							name="password2"
-							onChange={e => this.handleChange(e)}
-						/>
-
+						<div className="Password">
+							<TextField
+								className="Standard-input"
+								label="Password:"
+								type="password"
+								autoComplete="current-password"
+								margin="normal"
+								id="password"
+								style={{
+									width: "300px"
+								}}
+								name="password"
+								required
+								onChange={e => this.handleChange(e)}
+							/>
+							{/* <p>Forgot Password</p> */}
+						</div>
 						<Button
 							variant="contained"
 							color="primary"
-							id="submit"
-							onClick={() => this.handleSignup()}
 							className={classNames(classes.signin)}
+							id="sign-in"
+							onClick={() => this.handleSignin()}
 						>
-							Submit
+							Sign in
 						</Button>
-
+						<div id="sign-up-div">
+							<p id="sign-up-p">Or sign in with Google&trade;</p>
+						</div>
 						<Button
 							variant="contained"
-							color="secondary"
-							id="cancel"
-							onClick={() => this.handleCancel()}
-							className={classNames(classes.signup)}
+							color="primary"
+							className={classNames(classes.signin)}
+							id="sign-in"
+							onClick={() => this.GoogleLogin()}
 						>
-							Cancel
+							Sign in with Google
 						</Button>
+						<div id="sign-up-div">
+							<p id="sign-up-p">Don't have an account yet?</p>
+						</div>
+						<div>
+							<Button
+								variant="contained"
+								color="secondary"
+								id="sign-up"
+								className={classNames(classes.signup)}
+								onClick={() => this.handleSignup()}
+							>
+								Sign up
+							</Button>
+						</div>
 					</MuiThemeProvider>
 				</header>
 
 				{/* username empty warning */}
 				<Dialog
-					open={this.state.apiFailDialog}
-					onClose={() => this.handleapiFailDialogClose()}
+					open={this.state.usernameEmptyWarning}
+					onClose={() => this.handleUsernameEmptyWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
 						{"Credentials Error"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							{this.state.response}
+							Username cannot be empty!
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handleapiFailDialogClose()}
+							onClick={() =>
+								this.handleUsernameEmptyWarningClose()
+							}
 							color="primary"
 						>
 							OK
@@ -261,8 +268,8 @@ class Signup extends Component {
 
 				{/* password empty warning */}
 				<Dialog
-					open={this.state.passwordEmptyDialog}
-					onClose={() => this.handlepasswordEmptyDialogClose()}
+					open={this.state.passwordEmptyWarning}
+					onClose={() => this.handlePasswordEmptyWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
 						{"Credentials Error"}
@@ -275,7 +282,7 @@ class Signup extends Component {
 					<DialogActions>
 						<Button
 							onClick={() =>
-								this.handlepasswordEmptyDialogClose()
+								this.handlePasswordEmptyWarningClose()
 							}
 							color="primary"
 						>
@@ -284,45 +291,24 @@ class Signup extends Component {
 					</DialogActions>
 				</Dialog>
 
-				{/* password not same warning */}
+				{/* user not found warning */}
 				<Dialog
-					open={this.state.passwordDiffDialog}
-					onClose={() => this.handlepasswordDiffDialogClose()}
+					open={this.state.userNotFoundWarning}
+					onClose={() => this.handleUserNotFoundWarningClose()}
 				>
 					<DialogTitle className={classes.dialogTitle}>
-						{"Credentials Error"}
+						{"Credentials Incorrect!"}
 					</DialogTitle>
 					<DialogContent className={classes.dialogContent}>
 						<DialogContentText className={classes.dialogText}>
-							Passwords are not the same!
+							{this.state.response}
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button
-							onClick={() => this.handlepasswordDiffDialogClose()}
-							color="primary"
-						>
-							OK
-						</Button>
-					</DialogActions>
-				</Dialog>
-
-				{/* Sign up Successful */}
-				<Dialog
-					open={this.state.successDialog}
-					onClose={() => this.handlesuccessDialogClose()}
-				>
-					<DialogTitle className={classes.dialogTitle}>
-						{"Success"}
-					</DialogTitle>
-					<DialogContent className={classes.dialogContent}>
-						<DialogContentText className={classes.dialogText}>
-							You have been successfully registered!
-						</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button
-							onClick={() => this.handlesuccessDialogClose()}
+							onClick={() =>
+								this.handleUserNotFoundWarningClose()
+							}
 							color="primary"
 						>
 							OK
@@ -334,8 +320,8 @@ class Signup extends Component {
 	}
 }
 
-Signup.propTypes = {
+Signin.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default connect()(withStyles(styles)(Signup));
+export default connect()(withStyles(styles)(Signin));

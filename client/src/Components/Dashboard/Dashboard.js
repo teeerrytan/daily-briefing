@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import "./Dashboard.css";
 import blueGrey from "@material-ui/core/colors/blueGrey";
-import Header from "./Header";
+import Header from "../Header/Header";
 import { connect } from "react-redux";
-import List from "./List";
+import List from "../List/List";
 
 const styles = theme => ({
 	signin: {

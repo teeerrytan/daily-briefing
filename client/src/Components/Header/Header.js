@@ -4,7 +4,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { connect } from "react-redux";
-import { logout, login } from "../Actions/actions";
+import { logout, login } from "../../Actions/actions";
 import { Redirect } from "react-router-dom";
 
 class Header extends Component {

@@ -1,0 +1,69 @@
+{
+	"data": [
+		null,
+		{
+			"email": "sample@gmail.com",
+			"events": {
+				"event3": {
+					"company": "Amazon",
+					"key": "will1",
+					"name": "Jeff Bezos",
+					"time": "04-25-2019 16:00 CST"
+				},
+				"event4": {
+					"company": "Apple",
+					"key": "will2",
+					"name": "Tim Cook",
+					"time": "04-26-2019 17:00 CST"
+				}
+			},
+			"pastEvents": {
+				"event1": {
+					"company": "Amazon",
+					"key": "will1",
+					"name": "Jeff Bezos",
+					"time": "04-22-2019 16:00 CST"
+				},
+				"event2": {
+					"company": "Apple",
+					"key": "will2",
+					"name": "Tim Cook",
+					"time": "04-23-2019 17:00 CST"
+				}
+			},
+			"username": "Will"
+		},
+		{
+			"email": "sadie@gmail.com",
+			"events": {
+				"event3": {
+					"company": "eecs",
+					"key": "sadie1",
+					"name": "Chris Riesbeck",
+					"time": "04-27-2019 18:00 CST"
+				},
+				"event4": {
+					"company": "ATT",
+					"key": "sadie2",
+					"name": "John Doe",
+					"time": "04-28-2019 19:00 CST"
+				}
+			},
+			"pastEvents": {
+				"event1": {
+					"company": "eecs",
+					"key": "sadie1",
+					"name": "Chris Riesbeck",
+					"time": "04-22-2019 18:00 CST"
+				},
+				"event2": {
+					"company": "ATT",
+					"key": "sadie2",
+					"name": "John Doe",
+					"time": "04-23-2019 19:00 CST"
+				}
+			},
+			"username": "Sadie"
+		}
+	]
+}

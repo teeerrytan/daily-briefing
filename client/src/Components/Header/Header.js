@@ -43,7 +43,6 @@ class Header extends Component {
 					},
 					auth: localStorage.getItem("auth")
 				});
-				console.log("auth now", this.state.auth);
 			} else {
 				if (this.state.page === "dashboard") {
 					alert("Please sign in.");
@@ -76,7 +75,6 @@ class Header extends Component {
 		this.setState({ logout: true });
 	};
 	render() {
-		console.log("header page states: \n", this.state);
 		const { auth, anchorEl } = this.state;
 		const open = Boolean(anchorEl);
 		if (this.state.logout) {

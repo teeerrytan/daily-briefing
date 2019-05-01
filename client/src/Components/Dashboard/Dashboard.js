@@ -42,7 +42,15 @@ const styles = theme => ({
 		color: "black"
 	},
 	margin: {
-		margin: theme.spacing.unit
+		margin: theme.spacing.unit,
+		color: theme.palette.getContrastText(blueGrey[600]),
+		backgroundColor: blueGrey[700],
+		"&:hover": {
+			backgroundColor: blueGrey[900]
+		},
+		width: "50%",
+		minWidth: 200,
+		maxWidth: 300
 	}
 });
 
@@ -70,7 +78,7 @@ class Dashboard extends Component {
 					page="dashboard"
 				/>
 				<header className="Dashboard-header">
-					<p className="Dashboard-title"> DashBoard </p>
+					<p className="Dashboard-title"> Your Dashboard </p>
 					<List />
 					<hr className="hr-main" />
 					<Fab
@@ -80,7 +88,7 @@ class Dashboard extends Component {
 						className={classes.margin}
 					>
 						<MaterialIcon icon="navigation" />
-						Send Eamil to Me
+						&nbsp;Send Eamil to Me
 					</Fab>
 				</header>
 			</div>

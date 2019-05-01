@@ -15,11 +15,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
+
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import Item from "../Item/Item";
 import AddItem from "../AddItem/AddItem";
@@ -28,7 +24,10 @@ const styles = theme => ({
 	root: {
 		width: "90%",
 		maxWidth: 800,
-		backgroundColor: theme.palette.background.paper
+		backgroundColor: theme.palette.background.paper,
+		boxShadow:
+			"0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)",
+		borderRadius: "10px"
 	},
 	nested: {
 		paddingLeft: theme.spacing.unit * 4
@@ -55,7 +54,11 @@ class FolderList extends React.Component {
 			open: false,
 			fullWidth: true,
 			maxWidth: "sm",
-			category: ""
+			category: "",
+			name: "",
+			company: "",
+			time: "2019-05-24T10:30",
+			id: 5
 		};
 	}
 
@@ -98,7 +101,19 @@ class FolderList extends React.Component {
 		this.setState(state => ({ open: !state.open }));
 	};
 
-	handleAdd = () => {};
+	handleAdd = () => {
+		let item = {
+			id: this.state.id + 1,
+			icon: "work",
+			title: `Meeting with ${this.state.name} from ${this.state.company}`,
+			subTitle: `${this.state.time}`.replace("T", " Time: "),
+			result: `${this.state.name}: blabla  ${this.state.company}: blabla`
+		};
+		this.setState(prevState => ({
+			id: prevState.id + 1,
+			contents: [...prevState.contents, item]
+		}));
+	};
 
 	handleAddOpen = () => {
 		this.setState({ open: true });
@@ -110,6 +125,23 @@ class FolderList extends React.Component {
 
 	handleSelectChange = e => {
 		this.setState({ category: e.target.value });
+	};
+
+	handleChange = name => event => {
+		this.setState({ [name]: event.target.value });
+	};
+
+	handleDelete = id => {
+		let temp = this.state.contents;
+		for (let i = 0; i < temp.length; i++) {
+			if (temp[i].id === id) {
+				temp.splice(i, 1);
+				break;
+			}
+		}
+		this.setState(prevState => ({
+			contents: temp
+		}));
 	};
 
 	render() {
@@ -125,9 +157,16 @@ class FolderList extends React.Component {
 				className={classes.root}
 			>
 				<AddItem handleAddOpen={() => this.handleAddOpen()} />
+				{/* item list */}
 				{this.state.contents.map(item => (
-					<Item key={item.id} content={item} />
+					<Item
+						key={item.id}
+						id={item.id}
+						content={item}
+						delete={() => this.handleDelete(item.id)}
+					/>
 				))}
+
 				<MuiThemeProvider theme={theme}>
 					<Dialog
 						open={this.state.open}
@@ -144,24 +183,33 @@ class FolderList extends React.Component {
 								Please fill in the details of the appointment.
 							</DialogContentText>
 							<TextField
-								autoFocus
-								margin="dense"
-								id="name"
-								label="Appointment Content"
-								fullWidth
-								variant="filled"
+								id="standard-name"
+								label="Name"
+								className={classes.textField}
+								value={this.state.name}
+								onChange={this.handleChange("name")}
+								margin="normal"
+							/>
+							<TextField
+								id="standard-company"
+								label="Company"
+								className={classes.textField}
+								value={this.state.company}
+								onChange={this.handleChange("company")}
+								margin="normal"
 							/>
 							<TextField
 								id="datetime-local"
 								label="Date & Time"
 								type="datetime-local"
 								defaultValue="2019-05-24T10:30"
+								onChange={this.handleChange("time")}
 								className={classes.textField}
 								InputLabelProps={{
 									shrink: true
 								}}
 							/>
-							<FormControl className={classes.formControl}>
+							{/* <FormControl className={classes.formControl}>
 								<InputLabel shrink htmlFor="category">
 									Category
 								</InputLabel>
@@ -186,7 +234,7 @@ class FolderList extends React.Component {
 										Other
 									</MenuItem>
 								</Select>
-							</FormControl>
+							</FormControl> */}
 						</DialogContent>
 						<DialogActions>
 							<Button

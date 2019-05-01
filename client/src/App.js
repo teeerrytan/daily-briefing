@@ -15,6 +15,8 @@ const config = require("./firebaseKey.json");
 firebase.initializeApp(config);
 
 const auth = firebase.auth();
+var db = firebase.database();
+var ref = db.ref("/data");
 
 class App extends Component {
 	constructor(props) {
@@ -56,12 +58,49 @@ class App extends Component {
 	signInWithGoogle = async () => {
 		const googleAuthProvider = await new firebase.auth.GoogleAuthProvider();
 		let success = true;
+
 		const data = await auth
 			.signInWithPopup(googleAuthProvider)
 			.catch(error => {
 				console.log(error);
 				success = false;
 			});
+
+		if (success) {
+			//update database
+			var postData = {
+				email: data.user.email,
+				events: {
+					event3: {
+						company: "test",
+						key: "1",
+						name: "test",
+						time: "test"
+					}
+				},
+				pastEvents: {
+					event1: {
+						company: "test",
+						key: "2",
+						name: "test",
+						time: "test"
+					}
+				},
+				username: data.user.displayName
+			};
+
+			var updates = {};
+			var snapshot = await firebase
+				.database()
+				.ref("/" + data.user.uid)
+				.once("value");
+			if (!snapshot) {
+				updates["/" + data.user.uid] = postData;
+				await ref.update(updates, () => {
+					console.log("Database update successfully!");
+				});
+			}
+		}
 
 		console.log(data);
 		//update store

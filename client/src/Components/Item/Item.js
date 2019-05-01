@@ -51,7 +51,11 @@ class FolderList extends React.Component {
 						<MaterialIcon icon="keyboard_arrow_down" />
 					)}
 					<ListItemSecondaryAction className="delete-button">
-						<IconButton aria-label="Delete" style={{}}>
+						<IconButton
+							aria-label="Delete"
+							style={{}}
+							onClick={() => this.props.delete()}
+						>
 							<MaterialIcon icon="delete" />
 						</IconButton>
 					</ListItemSecondaryAction>

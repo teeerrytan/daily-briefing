@@ -12,6 +12,8 @@ const port = process.env.PORT || 5000;
 firebase.initializeApp(config);
 
 var auth = firebase.auth();
+var db = firebase.database();
+var ref = db.ref("/data");
 var provider = new firebase.auth.GoogleAuthProvider();
 
 //setting up middleware for retrieving data from front-end
@@ -125,26 +127,54 @@ app.post("/login/email", async (req, res) => {
 //Google login, don't use for now
 app.post("/login/google", async (req, res) => {
 	try {
+		console.log("run!");
 		let user;
+		let respond;
 		await auth
 			.signInWithPopup(provider)
-			.then(function(result) {
+			.then(result => {
 				// This gives you a Google Access Token. You can use it to access the Google API.
+				// eslint-disable-next-line no-unused-vars
 				var token = result.credential.accessToken;
 				// The signed-in user info.
 				user = result.user;
+				console.log(user);
 				// ...
 			})
 			.catch(function(error) {
-				// Handle Errors here.
-				var errorCode = error.code;
-				var errorMessage = error.message;
-				// The email of the user's account used.
-				var email = error.email;
-				// The firebase.auth.AuthCredential type that was used.
-				var credential = error.credential;
-				// ...
+				respond = error;
 			});
+		if (!respond) {
+			//update database
+			var postData = {
+				email: user.email,
+				events: {
+					event3: {
+						company: "test",
+						key: "1",
+						name: "test",
+						time: "test"
+					}
+				},
+				pastEvents: {
+					event1: {
+						company: "test",
+						key: "2",
+						name: "test",
+						time: "test"
+					}
+				},
+				username: user.displayName
+			};
+
+			var updates = {};
+			var snapshot = await ref("/" + user.email).once();
+			console.log(snapshot);
+			if (!snapshot) {
+				updates["/" + user.email] = postData;
+				await ref.update(updates);
+			}
+		}
 		console.log(`${user} logged in!`);
 		res.send(user);
 		//login process

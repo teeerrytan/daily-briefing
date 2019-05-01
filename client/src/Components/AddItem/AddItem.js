@@ -6,7 +6,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import MaterialIcon from "@material/react-material-icon";
-import pink from "@material-ui/core/colors/pink";
 import "./AddItem.css";
 
 const styles = theme => ({

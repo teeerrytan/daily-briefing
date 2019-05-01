@@ -16,7 +16,7 @@ export const store = createStore(
 
 //listen to store
 store.subscribe(() => {
-	console.log("redux store now: " + store.getState());
+	console.log("redux store now: ", store.getState());
 });
 //test redux
 // const payload = {

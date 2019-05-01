@@ -2,7 +2,8 @@ const initialState = {
 	user: {
 		displayName: "",
 		email: "",
-		photoURL: ""
+		photoURL: "",
+		uid: ""
 	},
 	auth: false,
 	currentPage: "Signin"

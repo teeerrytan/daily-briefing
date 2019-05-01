@@ -82,7 +82,10 @@ class Dashboard extends Component {
 				/>
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> Your Dashboard </p>
-					<List />
+					<List
+						addEvent={userData => this.props.addEvent(userData)}
+						uid={this.props.uid}
+					/>
 
 					<Fab
 						variant="extended"

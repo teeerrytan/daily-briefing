@@ -17,12 +17,15 @@ firebase.initializeApp(config);
 const auth = firebase.auth();
 var db = firebase.database();
 var ref = db.ref("/data");
+var userRef = db.ref("/data/users");
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			userData: {}
+		};
 	}
 	componentDidMount() {
 		// this.setState({ currentPage: this.props.currentPage });
@@ -65,44 +68,30 @@ class App extends Component {
 				console.log(error);
 				success = false;
 			});
+		this.setState({
+			userData: data
+		});
 
 		if (success) {
 			//update database
-			var postData = {
-				email: data.user.email,
-				events: {
-					event3: {
-						company: "test",
-						key: "1",
-						name: "test",
-						time: "test"
-					}
-				},
-				pastEvents: {
-					event1: {
-						company: "test",
-						key: "2",
-						name: "test",
-						time: "test"
-					}
-				},
-				username: data.user.displayName
-			};
-
-			var updates = {};
-			var snapshot = await firebase
+			let snapshot = await firebase
 				.database()
-				.ref("/" + data.user.uid)
+				.ref("/data/users/" + data.user.uid)
 				.once("value");
-			if (!snapshot) {
-				updates["/" + data.user.uid] = postData;
-				await ref.update(updates, () => {
-					console.log("Database update successfully!");
-				});
+
+			if (!snapshot.val().email) {
+				var updates = {};
+				var updateData = {
+					email: data.user.email,
+					username: data.user.displayName
+				};
+
+				updates["/" + data.user.uid] = updateData;
+
+				await userRef.update(updates);
 			}
 		}
 
-		console.log(data);
 		//update store
 		// this.setState({
 		// 	photoURL: data.user.photoURL,
@@ -113,7 +102,8 @@ class App extends Component {
 			user: {
 				photoURL: data.user.photoURL,
 				displayName: data.user.displayName,
-				email: data.user.email
+				email: data.user.email,
+				uid: data.user.uid
 			},
 			auth: true
 		};
@@ -131,25 +121,46 @@ class App extends Component {
 			password: password
 		}).catch(err => console.log(err));
 
-		console.log(res);
-		if (res == "1") {
+		console.log("email login user data: ", res);
+		let ans = res.split(" ");
+		if (ans[0] == "1") {
+			let uid = ans[1];
 			console.log("got here");
 			const state = {
 				user: {
 					photoURL:
 						"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
 					displayName: username,
-					email: username
+					email: username,
+					uid: uid
 				},
 				auth: true
 			};
+
+			//update database
+			let snapshot = await firebase
+				.database()
+				.ref("/data/users/" + uid)
+				.once("value");
+
+			if (!snapshot.val().email) {
+				var updates = {};
+				var updateData = {
+					email: username,
+					username: username
+				};
+
+				updates["/" + uid] = updateData;
+
+				await userRef.update(updates);
+			}
 
 			this.saveState(state);
 
 			this.props.dispatch(login(state));
 			return "1";
 		} else {
-			return res;
+			return res.error;
 		}
 	};
 
@@ -168,11 +179,31 @@ class App extends Component {
 		localStorage.setItem("email", state.user.email);
 		localStorage.setItem("photoURL", state.user.photoURL);
 		localStorage.setItem("auth", state.auth);
+		localStorage.setItem("uid", state.user.uid);
 
 		return;
 	};
 
+	addEvent = async userData => {
+		var updates = {};
+		var updateData = {
+			company: userData.company,
+			name: userData.name,
+			time: userData.time
+		};
+
+		updates[
+			"/" +
+				localStorage.getItem("uid") +
+				"/events/".concat(`${userData.time + userData.name}`)
+		] = updateData;
+
+		await userRef.update(updates);
+		return;
+	};
+
 	render() {
+		console.log("User Data: ", this.state.userData);
 		return (
 			<Switch>
 				<Route
@@ -212,10 +243,12 @@ class App extends Component {
 					path="/dashboard"
 					render={props => (
 						<Dashboard
+							addEvent={userData => this.addEvent(userData)}
 							changePage={cur => this.changePage(cur)}
 							photoURL={this.state.photoURL}
 							displayName={this.state.displayName}
 							email={this.state.email}
+							uid={this.state.uid}
 						/>
 					)}
 				/>

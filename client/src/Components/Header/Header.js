@@ -96,7 +96,9 @@ class Header extends Component {
 									src={this.state.user.photoURL}
 									style={{
 										width: "60px",
-										borderRadius: "50%"
+										borderRadius: "50%",
+										boxShadow:
+											"0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)"
 									}}
 									alt=""
 									className="avatar-img"

@@ -101,7 +101,7 @@ class FolderList extends React.Component {
 		this.setState(state => ({ open: !state.open }));
 	};
 
-	handleAdd = () => {
+	handleAdd = async () => {
 		let item = {
 			id: this.state.id + 1,
 			icon: "work",
@@ -114,6 +114,16 @@ class FolderList extends React.Component {
 			contents: [...prevState.contents, item],
 			open: false
 		}));
+
+		let userData = {
+			uid: this.props.uid,
+			name: this.state.name,
+			company: this.state.company,
+			time: this.state.time
+		};
+
+		await this.props.addEvent(userData);
+		return;
 	};
 
 	handleAddOpen = () => {

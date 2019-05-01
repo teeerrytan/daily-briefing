@@ -41,16 +41,19 @@ const styles = theme => ({
 		fontSize: 18,
 		color: "black"
 	},
-	margin: {
-		margin: theme.spacing.unit,
-		color: theme.palette.getContrastText(blueGrey[600]),
-		backgroundColor: blueGrey[700],
-		"&:hover": {
-			backgroundColor: blueGrey[900]
-		},
+	sendButton: {
+		marginTop: "30px",
+		marginBottom: "50px",
 		width: "50%",
-		minWidth: 200,
-		maxWidth: 300
+		minWidth: 230,
+		maxWidth: 300,
+		background: "linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)",
+		borderRadius: 6,
+		border: 0,
+		color: "white",
+		height: "48px",
+		padding: "0 30px",
+		boxShadow: "0 3px 5px 2px rgba(255, 105, 135, 0.3)"
 	}
 });
 
@@ -80,12 +83,12 @@ class Dashboard extends Component {
 				<header className="Dashboard-header">
 					<p className="Dashboard-title"> Your Dashboard </p>
 					<List />
-					<hr className="hr-main" />
+
 					<Fab
 						variant="extended"
 						color="primary"
 						aria-label="Add"
-						className={classes.margin}
+						className={classes.sendButton}
 					>
 						<MaterialIcon icon="navigation" />
 						&nbsp;Send Eamil to Me

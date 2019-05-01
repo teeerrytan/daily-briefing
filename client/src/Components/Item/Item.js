@@ -16,6 +16,13 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 const styles = theme => ({
 	nested: {
 		paddingLeft: theme.spacing.unit * 4
+	},
+	avatar: {
+		color: "#fff",
+		background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)"
+	},
+	delete: {
+		color: "#b80000"
 	}
 });
 
@@ -38,7 +45,7 @@ class FolderList extends React.Component {
 		return (
 			<div>
 				<ListItem button onClick={this.handleClick}>
-					<Avatar>
+					<Avatar className={classes.avatar}>
 						<MaterialIcon icon={this.state.content.icon} />
 					</Avatar>
 					<ListItemText
@@ -53,7 +60,7 @@ class FolderList extends React.Component {
 					<ListItemSecondaryAction className="delete-button">
 						<IconButton
 							aria-label="Delete"
-							style={{}}
+							className={classes.delete}
 							onClick={() => this.props.delete()}
 						>
 							<MaterialIcon icon="delete" />

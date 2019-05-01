@@ -15,15 +15,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import blueGrey from "@material-ui/core/colors/blueGrey";
+
 import Item from "../Item/Item";
 import AddItem from "../AddItem/AddItem";
 
 const styles = theme => ({
 	root: {
-		width: "90%",
-		maxWidth: 800,
+		width: "80%",
+		maxWidth: 650,
 		backgroundColor: theme.palette.background.paper,
 		boxShadow:
 			"0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)",
@@ -111,7 +111,8 @@ class FolderList extends React.Component {
 		};
 		this.setState(prevState => ({
 			id: prevState.id + 1,
-			contents: [...prevState.contents, item]
+			contents: [...prevState.contents, item],
+			open: false
 		}));
 	};
 
@@ -164,6 +165,7 @@ class FolderList extends React.Component {
 						id={item.id}
 						content={item}
 						delete={() => this.handleDelete(item.id)}
+						className="item"
 					/>
 				))}
 

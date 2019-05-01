@@ -109,7 +109,7 @@ class FolderList extends React.Component {
 			subTitle: `${this.state.time}`.replace("T", " Time: "),
 			result: `${this.state.name}: blabla  ${this.state.company}: blabla`
 		};
-		this.setState(prevState => ({
+		await this.setState(prevState => ({
 			id: prevState.id + 1,
 			contents: [...prevState.contents, item],
 			open: false
@@ -119,7 +119,8 @@ class FolderList extends React.Component {
 			uid: this.props.uid,
 			name: this.state.name,
 			company: this.state.company,
-			time: this.state.time
+			time: this.state.time,
+			id: this.state.id
 		};
 
 		await this.props.addEvent(userData);
@@ -142,7 +143,7 @@ class FolderList extends React.Component {
 		this.setState({ [name]: event.target.value });
 	};
 
-	handleDelete = id => {
+	handleDelete = async id => {
 		let temp = this.state.contents;
 		for (let i = 0; i < temp.length; i++) {
 			if (temp[i].id === id) {
@@ -150,9 +151,17 @@ class FolderList extends React.Component {
 				break;
 			}
 		}
-		this.setState(prevState => ({
+		await this.setState(prevState => ({
 			contents: temp
 		}));
+
+		let userData = {
+			uid: this.props.uid,
+			id: id
+		};
+
+		await this.props.deleteEvent(userData);
+		return;
 	};
 
 	render() {

@@ -52,7 +52,7 @@ class App extends Component {
 			return res.data;
 		}
 	};
-
+	//not in use
 	checkIfLoggedIn = () => {
 		if (localStorage.getItem("firebase_idToken")) {
 		}
@@ -79,16 +79,20 @@ class App extends Component {
 				.ref("/data/users/" + data.user.uid)
 				.once("value");
 
-			if (!snapshot.val().email) {
+			if (!snapshot.val()) {
+				console.log("no snapshot");
 				var updates = {};
 				var updateData = {
 					email: data.user.email,
-					username: data.user.displayName
+					username: data.user.displayName,
+					curEventId: 5
 				};
 
 				updates["/" + data.user.uid] = updateData;
-
+				localStorage.setItem("curEventId", 5);
 				await userRef.update(updates);
+			} else {
+				localStorage.setItem("curEventId", snapshot.val().curEventId);
 			}
 		}
 
@@ -143,16 +147,19 @@ class App extends Component {
 				.ref("/data/users/" + uid)
 				.once("value");
 
-			if (!snapshot.val().email) {
+			if (!snapshot.val()) {
 				var updates = {};
 				var updateData = {
 					email: username,
-					username: username
+					username: username,
+					curEventId: 5
 				};
 
 				updates["/" + uid] = updateData;
-
+				localStorage.setItem("curEventId", 5);
 				await userRef.update(updates);
+			} else {
+				localStorage.setItem("curEventId", snapshot.val().curEventId);
 			}
 
 			this.saveState(state);
@@ -186,19 +193,35 @@ class App extends Component {
 
 	addEvent = async userData => {
 		var updates = {};
+		var curEventId = Number(localStorage.getItem("curEventId")) + 1;
 		var updateData = {
 			company: userData.company,
 			name: userData.name,
 			time: userData.time
 		};
-
+		updates["/" + localStorage.getItem("uid") + "/curEventId"] = curEventId;
 		updates[
 			"/" +
 				localStorage.getItem("uid") +
-				"/events/".concat(`${userData.time + userData.name}`)
+				"/events/".concat(`${userData.id}`)
 		] = updateData;
 
 		await userRef.update(updates);
+
+		localStorage.setItem("curEventId", curEventId);
+		return;
+	};
+
+	deleteEvent = async userData => {
+		var updates = {};
+		updates[
+			"/" +
+				localStorage.getItem("uid") +
+				"/events/".concat(`${userData.id}`)
+		] = null;
+
+		await userRef.update(updates);
+
 		return;
 	};
 
@@ -244,6 +267,7 @@ class App extends Component {
 					render={props => (
 						<Dashboard
 							addEvent={userData => this.addEvent(userData)}
+							deleteEvent={userData => this.deleteEvent(userData)}
 							changePage={cur => this.changePage(cur)}
 							photoURL={this.state.photoURL}
 							displayName={this.state.displayName}

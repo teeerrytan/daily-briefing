@@ -84,6 +84,9 @@ class Dashboard extends Component {
 					<p className="Dashboard-title"> Your Dashboard </p>
 					<List
 						addEvent={userData => this.props.addEvent(userData)}
+						deleteEvent={userData =>
+							this.props.deleteEvent(userData)
+						}
 						uid={this.props.uid}
 					/>
 

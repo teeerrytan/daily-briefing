@@ -18,7 +18,7 @@ const auth = firebase.auth();
 var db = firebase.database();
 var ref = db.ref("/data");
 var userRef = db.ref("/data/users");
-var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
+var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 
 class App extends Component {
 	constructor(props) {
@@ -40,7 +40,6 @@ class App extends Component {
 		}
 		return res.data;
 	};
-
 
 	postRequest = async (route, data = null) => {
 		if (!data) {
@@ -255,10 +254,12 @@ class App extends Component {
 	};
 
 	getGoogle = async () => {
-		const res = await this.postRequest("/get/google", {
-		}).catch(err => console.log(err));
-		JSON.stringify(res)
-	}
+		const res = await this.postRequest("/get/google", {}).catch(err =>
+			console.log(err)
+		);
+		return JSON.stringify(res);
+		// JSON.stringify(res);
+	};
 
 	render() {
 		console.log("User Data: ", this.state.userData);
@@ -309,7 +310,6 @@ class App extends Component {
 							displayName={this.state.displayName}
 							email={this.state.email}
 							uid={this.state.uid}
-
 						/>
 					)}
 				/>

@@ -58,7 +58,7 @@ const styles = theme => ({
 	}
 });
 
-var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
+var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 
 class Dashboard extends Component {
 	constructor(props) {
@@ -73,7 +73,7 @@ class Dashboard extends Component {
 	}
 
 	async getSearch(results) {
-		// console.log(this.props.getGoogle())
+		console.log(this.props.getGoogle());
 		// console.log(this.props.user.email)
 		// var xhttp = new XMLHttpRequest();
 		// xhttp.open("GET",
@@ -82,7 +82,6 @@ class Dashboard extends Component {
 		// await xhttp.send()
 		// console.log(xhttp.resonse);
 		//axios.get("https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures")
-
 	}
 
 	constructMessage() {
@@ -96,35 +95,36 @@ class Dashboard extends Component {
 				meetingHistory: 3,
 				companyInfo: "Microsoft is a tech company"
 			}
-		]
+		];
 
 		// Basically take info above and make template for nice email.
-		console.log(this.props.root)
+		console.log(this.props.root);
 	}
 
 	send(email, user1, message1) {
-		var emailjs = require('emailjs-com')
+		var emailjs = require("emailjs-com");
 		var service_id = "default_service";
-	  var template_id = " template_vnqh5vdO";
-		var user_id =  "user_5wah7rPNg4BH4ntQ0325x";
+		var template_id = " template_vnqh5vdO";
+		var user_id = "user_5wah7rPNg4BH4ntQ0325x";
 		var params = {
-			'to_email': "sadie.j.hood@gmail.com",
-			'user': user1.toString(),
-			'message': message1.toString()
-		}
+			to_email: "sadie.j.hood@gmail.com",
+			user: user1.toString(),
+			message: message1.toString()
+		};
 
-		emailjs.send("gmail", "template_vnqh5vdO", params, user_id)
-  	.then(function(){
-    	console.log('success')
-    }, function(err) {
-       console.log('fail: ', err)
-    });
+		emailjs.send("gmail", "template_vnqh5vdO", params, user_id).then(
+			function() {
+				console.log("success");
+			},
+			function(err) {
+				console.log("fail: ", err);
+			}
+		);
 	}
 
 	render() {
 		const { classes } = this.props;
 		console.log("Dashboard page states: \n", this.state);
-		console.log(this.props.getGoogle());
 		// console.log(this.props)
 		return (
 			<div className="Dashboard">
@@ -150,10 +150,10 @@ class Dashboard extends Component {
 						color="primary"
 						aria-label="Add"
 						className={classes.sendButton}
-						onClick={this.getSearch}
+						onClick={() => this.getSearch()}
 						// onClick={this.send.bind(this.state.email,'Sadie', 'You are meeting with _ and _ and _ today!')}
 					>
-						<MaterialIcon icon="navigation"/>
+						<MaterialIcon icon="navigation" />
 						&nbsp;Send Email to Me
 					</Fab>
 				</header>

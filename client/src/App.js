@@ -61,6 +61,7 @@ class App extends Component {
 	signInWithGoogle = async () => {
 		const googleAuthProvider = await new firebase.auth.GoogleAuthProvider();
 		let success = true;
+		let events = [];
 
 		const data = await auth
 			.signInWithPopup(googleAuthProvider)
@@ -93,6 +94,7 @@ class App extends Component {
 				await userRef.update(updates);
 			} else {
 				localStorage.setItem("curEventId", snapshot.val().curEventId);
+				await this.getEvents(snapshot.val().events, events);
 			}
 		}
 
@@ -102,19 +104,36 @@ class App extends Component {
 		// 	displayName: data.user.displayName,
 		// 	email: data.user.email
 		// });
+		var str = JSON.stringify(events);
+		await localStorage.setItem("events", str);
 		const state = {
 			user: {
 				photoURL: data.user.photoURL,
 				displayName: data.user.displayName,
 				email: data.user.email,
-				uid: data.user.uid
+				uid: data.user.uid,
+				events: events
 			},
 			auth: true
 		};
+
 		this.saveState(state);
 		this.props.dispatch(login(state));
 		console.log("success content is: " + success);
 		return success;
+	};
+
+	getEvents = async (database, events) => {
+		for (let item of Object.values(database)) {
+			let temp = {
+				id: item.id,
+				icon: "work",
+				title: `Meeting with ${item.name} from ${item.company}`,
+				subTitle: `${item.time}`.replace("T", " Time: "),
+				result: item.result
+			};
+			events.push(temp);
+		}
 	};
 
 	//email login
@@ -129,17 +148,8 @@ class App extends Component {
 		let ans = res.split(" ");
 		if (ans[0] == "1") {
 			let uid = ans[1];
+			let events = [];
 			console.log("got here");
-			const state = {
-				user: {
-					photoURL:
-						"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
-					displayName: username,
-					email: username,
-					uid: uid
-				},
-				auth: true
-			};
 
 			//update database
 			let snapshot = await firebase
@@ -160,10 +170,25 @@ class App extends Component {
 				await userRef.update(updates);
 			} else {
 				localStorage.setItem("curEventId", snapshot.val().curEventId);
+				await this.getEvents(snapshot.val().events, events);
 			}
 
-			this.saveState(state);
+			const state = {
+				user: {
+					photoURL:
+						"https://cdn.iconscout.com/icon/free/png-256/avatar-375-456327.png",
+					displayName: username,
+					email: username,
+					uid: uid,
+					events: events
+				},
+				auth: true
+			};
 
+			var str = JSON.stringify(events);
+			await localStorage.setItem("events", str);
+
+			this.saveState(state);
 			this.props.dispatch(login(state));
 			return "1";
 		} else {
@@ -197,13 +222,15 @@ class App extends Component {
 		var updateData = {
 			company: userData.company,
 			name: userData.name,
-			time: userData.time
+			time: userData.time,
+			id: curEventId,
+			result: " "
 		};
 		updates["/" + localStorage.getItem("uid") + "/curEventId"] = curEventId;
 		updates[
 			"/" +
 				localStorage.getItem("uid") +
-				"/events/".concat(`${userData.id}`)
+				"/events/".concat(`${curEventId}`)
 		] = updateData;
 
 		await userRef.update(updates);

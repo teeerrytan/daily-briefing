@@ -6,7 +6,8 @@ export function login(state) {
 				displayName: state.user.displayName,
 				email: state.user.email,
 				photoURL: state.user.photoURL,
-				uid: state.user.uid
+				uid: state.user.uid,
+				events: state.user.events
 			},
 			auth: state.auth,
 			currentPage: "Dashboard"
@@ -22,7 +23,8 @@ export function logout() {
 				displayName: "",
 				email: "",
 				photoURL: "",
-				uid: ""
+				uid: "",
+				events: []
 			},
 			auth: false,
 			currentPage: "Signin"

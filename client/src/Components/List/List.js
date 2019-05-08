@@ -16,7 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
-
+import { connect } from "react-redux";
 import Item from "../Item/Item";
 import AddItem from "../AddItem/AddItem";
 
@@ -50,20 +50,6 @@ class FolderList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contents: [],
-			open: false,
-			fullWidth: true,
-			maxWidth: "sm",
-			category: "",
-			name: "",
-			company: "",
-			time: "2019-05-24T10:30",
-			id: 5
-		};
-	}
-
-	componentDidMount() {
-		this.setState({
 			contents: [
 				{
 					id: 1,
@@ -78,23 +64,35 @@ class FolderList extends React.Component {
 					title: "Meeting with Jeff Bezos from Amazon",
 					subTitle: "16:00 CST / June 19, 2019",
 					result: "Jeff Bezos: blabla  Amazon: blabla"
-				},
-				{
-					id: 3,
-					icon: "work",
-					title: "Meeting with Elon Musk from Tesla",
-					subTitle: "10:00 CST / July 20, 2019",
-					result: "Elon Musk: blabla  Tesla: blabla"
-				},
-				{
-					id: 4,
-					icon: "work",
-					title: "Meeting with Jimmy Kimmel from ABC",
-					subTitle: "15:00 CST / July 12, 2019",
-					result: "Jimmy Kimmel: blabla  ABC: blabla"
 				}
-			]
-		});
+			],
+			open: false,
+			fullWidth: true,
+			maxWidth: "sm",
+			category: "",
+			name: "",
+			company: "",
+			time: "2019-05-24T10:30",
+			id: Number(localStorage.getItem("curEventId"))
+		};
+	}
+
+	// componentWillMount() {
+	// 	let events = this.props.user.user.events;
+	// }
+
+	componentDidMount() {
+		if (localStorage.getItem("events")) {
+			let initial = JSON.parse(localStorage.getItem("events"));
+			this.setState(prevState => ({
+				contents: initial
+			}));
+		} else {
+			let initial = this.props.user.user.events;
+			this.setState(prevState => ({
+				contents: initial
+			}));
+		}
 	}
 
 	handleClick = () => {
@@ -114,6 +112,8 @@ class FolderList extends React.Component {
 			contents: [...prevState.contents, item],
 			open: false
 		}));
+
+		localStorage.setItem("events", JSON.stringify(this.state.contents));
 
 		let userData = {
 			uid: this.props.uid,
@@ -278,4 +278,9 @@ FolderList.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(FolderList);
+const mapStateToProps = state => {
+	return {
+		user: state.user
+	};
+};
+export default connect(mapStateToProps)(withStyles(styles)(FolderList));

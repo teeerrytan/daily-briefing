@@ -8,6 +8,7 @@ import Fab from "@material-ui/core/Fab";
 import Header from "../Header/Header";
 import { connect } from "react-redux";
 import List from "../List/List";
+// import { sendEmail } from "../../Actions/actions.js"
 
 const styles = theme => ({
 	signin: {
@@ -68,9 +69,46 @@ class Dashboard extends Component {
 		};
 	}
 
+	constructMessage() {
+		var fakeEvents = [
+			{
+				name: "Michael Smith",
+				company: "Microsoft",
+				date: "May 5th, 4:30pm",
+				location: "Microft chicago 3rd floor room 345",
+				news: "Microsoft has recently dealt with a market crash",
+				meetingHistory: 3,
+				companyInfo: "Microsoft is a tech company"
+			}
+		]
+
+		// Basically take info above and make template for nice email.
+		console.log(this.props.root)
+	}
+
+	send(user1, message1) {
+		var emailjs = require('emailjs-com')
+		var service_id = "default_service";
+	  var template_id = " template_vnqh5vdO";
+		var user_id =  "user_5wah7rPNg4BH4ntQ0325x";
+		var params = {
+			'to_email':this.props.user.email,
+			'user': user1.toString(),
+			'message': message1.toString()
+		}
+
+		emailjs.send("gmail", "template_vnqh5vdO", params, user_id)
+  	.then(function(){
+    	console.log('success')
+    }, function(err) {
+       console.log('fail: ', err)
+    });
+	}
+
 	render() {
 		const { classes } = this.props;
 		console.log("Dashboard page states: \n", this.state);
+		// console.log(this.props)
 		return (
 			<div className="Dashboard">
 				<Header
@@ -95,9 +133,10 @@ class Dashboard extends Component {
 						color="primary"
 						aria-label="Add"
 						className={classes.sendButton}
+						onClick={this.send.bind('Sadie', 'You are meeting with _ and _ and _ today!')}
 					>
-						<MaterialIcon icon="navigation" />
-						&nbsp;Send Eamil to Me
+						<MaterialIcon icon="navigation"/>
+						&nbsp;Send Email to Me
 					</Fab>
 				</header>
 			</div>

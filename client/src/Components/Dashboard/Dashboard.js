@@ -58,15 +58,31 @@ const styles = theme => ({
 	}
 });
 
+var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
+
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: ""
+			data: "",
 			// photoURL: this.props.user.photoURL,
 			// displayName: this.props.user.displayName,
 			// email: this.props.user.email
+			searchResponse: null
 		};
+	}
+
+	async getSearch(results) {
+		// console.log(this.props.getGoogle())
+		// console.log(this.props.user.email)
+		// var xhttp = new XMLHttpRequest();
+		// xhttp.open("GET",
+		// "https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures",
+		// true)
+		// await xhttp.send()
+		// console.log(xhttp.resonse);
+		//axios.get("https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures")
+
 	}
 
 	constructMessage() {
@@ -86,13 +102,13 @@ class Dashboard extends Component {
 		console.log(this.props.root)
 	}
 
-	send(user1, message1) {
+	send(email, user1, message1) {
 		var emailjs = require('emailjs-com')
 		var service_id = "default_service";
 	  var template_id = " template_vnqh5vdO";
 		var user_id =  "user_5wah7rPNg4BH4ntQ0325x";
 		var params = {
-			'to_email':this.props.user.email,
+			'to_email': "sadie.j.hood@gmail.com",
 			'user': user1.toString(),
 			'message': message1.toString()
 		}
@@ -108,6 +124,7 @@ class Dashboard extends Component {
 	render() {
 		const { classes } = this.props;
 		console.log("Dashboard page states: \n", this.state);
+		console.log(this.props.getGoogle());
 		// console.log(this.props)
 		return (
 			<div className="Dashboard">
@@ -133,7 +150,8 @@ class Dashboard extends Component {
 						color="primary"
 						aria-label="Add"
 						className={classes.sendButton}
-						onClick={this.send.bind('Sadie', 'You are meeting with _ and _ and _ today!')}
+						onClick={this.getSearch}
+						// onClick={this.send.bind(this.state.email,'Sadie', 'You are meeting with _ and _ and _ today!')}
 					>
 						<MaterialIcon icon="navigation"/>
 						&nbsp;Send Email to Me

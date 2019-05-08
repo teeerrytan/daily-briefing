@@ -90,5 +90,17 @@ app.use(function(err, req, res) {
 	res.status(500).render("error");
 });
 
+app.post("/get/google", async (req, res) => {
+	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
+	const firstName = req.body.firstName;
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("GET",
+	"https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures",
+	true)
+	await xhttp.send()
+	res.json(xhttp.resonse)
+})
+
 //log that server is up and running
 app.listen(port, () => console.log(`Server is listening on port ${port}...`));

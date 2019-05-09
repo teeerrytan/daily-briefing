@@ -1,6 +1,6 @@
 # daily-briefing
 
-get firebaseKet.json
+get firebaseKey.json
 
 0. :dash: Preparation work
 

@@ -91,16 +91,6 @@ app.post("/get/google", async (req, res) => {
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 	const firstName = req.body.firstName;
 
-	// var xhttp = new XMLHttpRequest();
-	// xhttp.open(
-	// 	"GET",
-	// 	"https://www.googleapis.com/customsearch/v1?key=" +
-	// 		searchCred +
-	// 		"&cx=017576662512468239146:omuauf_lfve&q=lectures",
-	// 	true
-	// );
-	// await xhttp.send();
-	// res.json(xhttp.resonse);
 	const response = await customsearch.cse.list({
 		cx: "017576662512468239146:omuauf_lfve",
 		q: "lectures",

@@ -74,7 +74,11 @@ class FolderList extends React.Component {
 							<ListItemIcon>
 								<MaterialIcon icon="star" />
 							</ListItemIcon>
-							<a href={this.state.content.link} target="_blank">
+							<a
+								href={this.state.content.link}
+								target="_blank"
+								style={{ textDecoration: "none" }}
+							>
 								<ListItemText
 									inset
 									primary={this.state.content.result}

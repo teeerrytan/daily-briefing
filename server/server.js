@@ -90,10 +90,18 @@ app.post("/login/email", async (req, res) => {
 app.post("/get/google", async (req, res) => {
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 	const firstName = req.body.firstName;
+	const lastName = req.body.lastName;
+	const company = req.body.company;
+	const news = req.body.company;
+
+	const searchString = firstName + "+" + lastName + "+" + company
+	if (news) {
+		searchString += "+news"
+	}
 
 	const response = await customsearch.cse.list({
-		cx: "017576662512468239146:omuauf_lfve",
-		q: "lectures",
+		cx: "006675396895376221043:exnywglx5_8", // Specific search engine that we created... only contains a few websites
+		q: searchString,
 		auth: "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
 	});
 	console.log(response.data);

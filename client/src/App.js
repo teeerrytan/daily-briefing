@@ -125,15 +125,17 @@ class App extends Component {
 	};
 
 	getEvents = async (database, events) => {
-		for (let item of Object.values(database)) {
-			let temp = {
-				id: item.id,
-				icon: "work",
-				title: `Meeting with ${item.name} from ${item.company}`,
-				subTitle: `${item.time}`.replace("T", " Time: "),
-				result: item.result
-			};
-			events.push(temp);
+		if (database) {
+			for (let item of Object.values(database)) {
+				let temp = {
+					id: item.id,
+					icon: "work",
+					title: `Meeting with ${item.name} from ${item.company}`,
+					subTitle: `${item.time}`.replace("T", " Time: "),
+					result: item.result
+				};
+				events.push(temp);
+			}
 		}
 	};
 
@@ -253,8 +255,16 @@ class App extends Component {
 		return;
 	};
 
-	getGoogle = async () => {
-		const res = await this.postRequest("/get/google", {}).catch(err =>
+	getGoogle = async events => {
+		console.log(events)
+
+		const res = await this.postRequest("/get/google",
+		  {
+			firstName: "Sadie",
+		  lastName: "Hood",
+			company: "Microsoft",
+			news: "news"
+		  }).catch(err =>
 			console.log(err)
 		);
 		return JSON.stringify(res);
@@ -305,7 +315,7 @@ class App extends Component {
 							addEvent={userData => this.addEvent(userData)}
 							deleteEvent={userData => this.deleteEvent(userData)}
 							changePage={cur => this.changePage(cur)}
-							getGoogle={() => this.getGoogle()}
+							getGoogle={this.getGoogle(this.state.events)}
 							photoURL={this.state.photoURL}
 							displayName={this.state.displayName}
 							email={this.state.email}

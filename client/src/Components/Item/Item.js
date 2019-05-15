@@ -67,9 +67,10 @@ class FolderList extends React.Component {
 						</IconButton>
 					</ListItemSecondaryAction>
 				</ListItem>
+
 				<Collapse in={this.state.open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListItem button className={classes.nested}>
+						<ListItem className={classes.nested}>
 							<ListItemIcon>
 								<MaterialIcon icon="star" />
 							</ListItemIcon>
@@ -80,6 +81,7 @@ class FolderList extends React.Component {
 						</ListItem>
 					</List>
 				</Collapse>
+
 				<Divider />
 			</div>
 		);

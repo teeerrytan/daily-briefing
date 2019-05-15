@@ -50,22 +50,7 @@ class FolderList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contents: [
-				{
-					id: 1,
-					icon: "work",
-					title: "Meeting with Sundar Pichai from Google",
-					subTitle: "13:00 CST / May 18, 2019",
-					result: "Sundar Pichai: blabla  Google: blabla"
-				},
-				{
-					id: 2,
-					icon: "work",
-					title: "Meeting with Jeff Bezos from Amazon",
-					subTitle: "16:00 CST / June 19, 2019",
-					result: "Jeff Bezos: blabla  Amazon: blabla"
-				}
-			],
+			contents: [],
 			open: false,
 			fullWidth: true,
 			maxWidth: "sm",
@@ -84,11 +69,25 @@ class FolderList extends React.Component {
 	componentDidMount() {
 		if (localStorage.getItem("events")) {
 			let initial = JSON.parse(localStorage.getItem("events"));
+			console.log("initial is", initial);
+			for (var item of initial) {
+				const tempResult = JSON.parse(item.result);
+				item.result = tempResult.snippet + "\n" + tempResult.link;
+				item.link = tempResult.link;
+			}
 			this.setState(prevState => ({
 				contents: initial
 			}));
 		} else {
 			let initial = this.props.user.user.events;
+			for (var item of initial) {
+				const tempResult = JSON.parse(item.result);
+				item.result =
+					tempResult.snippet +
+					"\n" +
+					`<a href="${tempResult.link}">Link</a>`;
+				item.link = tempResult.link;
+			}
 			this.setState(prevState => ({
 				contents: initial
 			}));
@@ -105,9 +104,7 @@ class FolderList extends React.Component {
 			icon: "work",
 			title: `Meeting with ${this.state.name} from ${this.state.company}`,
 			subTitle: `${this.state.time}`.replace("T", " Time: "),
-			result: `${this.state.name}: Loading...  ${
-				this.state.company
-			}: Loading...`
+			result: `Loading...  `
 		};
 		await this.setState(prevState => ({
 			id: prevState.id + 1,
@@ -187,6 +184,7 @@ class FolderList extends React.Component {
 						content={item}
 						delete={() => this.handleDelete(item.id)}
 						className="item"
+						link={item.link}
 					/>
 				))}
 

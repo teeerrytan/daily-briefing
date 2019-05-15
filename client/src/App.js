@@ -219,18 +219,17 @@ class App extends Component {
 
 	addEvent = async userData => {
 		var updates = {};
-		const companyResult = await this.getGoogle(userData.company);
-		const nameResult = await this.getGoogle(userData.name);
-		const result = {
-			companyResult: {
-				link: companyResult.items[0].link,
-				snippet: companyResult.items[0].snippet
-			},
-			nameResult: {
-				link: nameResult.items[0].link,
-				snippet: nameResult.items[0].snippet
-			}
+		//call search api
+		const query = {
+			name: userData.name,
+			company: userData.company
 		};
+		const tempResult = await this.getGoogle(query);
+		const result = {
+			link: tempResult.items[0].link,
+			snippet: tempResult.items[0].snippet
+		};
+		//add to firebase
 		const strResult = await JSON.stringify(result);
 		var curEventId = Number(localStorage.getItem("curEventId")) + 1;
 		var updateData = {
@@ -250,7 +249,7 @@ class App extends Component {
 		await userRef.update(updates);
 
 		localStorage.setItem("curEventId", curEventId);
-		return;
+		return result;
 	};
 
 	deleteEvent = async userData => {
@@ -266,9 +265,9 @@ class App extends Component {
 		return;
 	};
 
-	getGoogle = async word => {
+	getGoogle = async query => {
 		const jsonRes = await this.postRequest("/get/google", {
-			word: word
+			query: JSON.stringify(query)
 		}).catch(err => console.log(err));
 		const result = JSON.parse(jsonRes);
 		return result;

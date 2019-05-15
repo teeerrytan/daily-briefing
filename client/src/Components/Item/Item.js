@@ -74,10 +74,13 @@ class FolderList extends React.Component {
 							<ListItemIcon>
 								<MaterialIcon icon="star" />
 							</ListItemIcon>
-							<ListItemText
-								inset
-								primary={this.state.content.result}
-							/>
+							<a href={this.state.content.link} target="_blank">
+								<ListItemText
+									inset
+									primary={this.state.content.result}
+									secondary={this.state.content.link}
+								/>
+							</a>
 						</ListItem>
 					</List>
 				</Collapse>

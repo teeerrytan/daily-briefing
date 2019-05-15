@@ -72,7 +72,7 @@ class FolderList extends React.Component {
 			console.log("initial is", initial);
 			for (var item of initial) {
 				const tempResult = JSON.parse(item.result);
-				item.result = tempResult.snippet + "\n" + tempResult.link;
+				item.result = tempResult.snippet;
 				item.link = tempResult.link;
 			}
 			this.setState(prevState => ({
@@ -82,10 +82,7 @@ class FolderList extends React.Component {
 			let initial = this.props.user.user.events;
 			for (var item of initial) {
 				const tempResult = JSON.parse(item.result);
-				item.result =
-					tempResult.snippet +
-					"\n" +
-					`<a href="${tempResult.link}">Link</a>`;
+				item.result = tempResult.snippet;
 				item.link = tempResult.link;
 			}
 			this.setState(prevState => ({

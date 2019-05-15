@@ -221,13 +221,26 @@ class App extends Component {
 
 	addEvent = async userData => {
 		var updates = {};
+		const companyResult = await this.getGoogle(userData.company);
+		const nameResult = await this.getGoogle(userData.name);
+		const result = {
+			companyResult: {
+				link: companyResult.items[0].link,
+				snippet: companyResult.items[0].snippet
+			},
+			nameResult: {
+				link: nameResult.items[0].link,
+				snippet: nameResult.items[0].snippet
+			}
+		};
+		const strResult = await JSON.stringify(result);
 		var curEventId = Number(localStorage.getItem("curEventId")) + 1;
 		var updateData = {
 			company: userData.company,
 			name: userData.name,
 			time: userData.time,
 			id: curEventId,
-			result: " "
+			result: strResult
 		};
 		updates["/" + localStorage.getItem("uid") + "/curEventId"] = curEventId;
 		updates[
@@ -255,19 +268,12 @@ class App extends Component {
 		return;
 	};
 
-	getGoogle = async events => {
-		console.log(events)
-
-		const res = await this.postRequest("/get/google",
-		  {
-			firstName: "Sadie",
-		  lastName: "Hood",
-			company: "Microsoft",
-			news: "news"
-		  }).catch(err =>
-			console.log(err)
-		);
-		return JSON.stringify(res);
+	getGoogle = async word => {
+		const jsonRes = await this.postRequest("/get/google", {
+			word: word
+		}).catch(err => console.log(err));
+		const result = JSON.parse(jsonRes);
+		return result;
 		// JSON.stringify(res);
 	};
 

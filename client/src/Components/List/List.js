@@ -105,7 +105,9 @@ class FolderList extends React.Component {
 			icon: "work",
 			title: `Meeting with ${this.state.name} from ${this.state.company}`,
 			subTitle: `${this.state.time}`.replace("T", " Time: "),
-			result: `${this.state.name}: blabla  ${this.state.company}: blabla`
+			result: `${this.state.name}: Loading...  ${
+				this.state.company
+			}: Loading...`
 		};
 		await this.setState(prevState => ({
 			id: prevState.id + 1,
@@ -230,32 +232,6 @@ class FolderList extends React.Component {
 									shrink: true
 								}}
 							/>
-							{/* <FormControl className={classes.formControl}>
-								<InputLabel shrink htmlFor="category">
-									Category
-								</InputLabel>
-								<Select
-									value={this.state.category}
-									onChange={this.handleSelectChange}
-									input={
-										<Input name="category" id="category" />
-									}
-									displayEmpty
-									name="category"
-									className={classes.selectEmpty}
-								>
-									<MenuItem value="">
-										<em>None</em>
-									</MenuItem>
-									<MenuItem value={"supervisor_account"}>
-										Family
-									</MenuItem>
-									<MenuItem value={"work"}>Work</MenuItem>
-									<MenuItem value={"local_activity"}>
-										Other
-									</MenuItem>
-								</Select>
-							</FormControl> */}
 						</DialogContent>
 						<DialogActions>
 							<Button

@@ -73,15 +73,8 @@ class Dashboard extends Component {
 	}
 
 	async getSearch(results) {
-		console.log(this.props.getGoogle());
-		// console.log(this.props.user.email)
-		// var xhttp = new XMLHttpRequest();
-		// xhttp.open("GET",
-		// "https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures",
-		// true)
-		// await xhttp.send()
-		// console.log(xhttp.resonse);
-		//axios.get("https://www.googleapis.com/customsearch/v1?key=" + searchCred +"&cx=017576662512468239146:omuauf_lfve&q=lectures")
+		const result = await this.props.getGoogle();
+		console.log(result);
 	}
 
 	constructMessage() {

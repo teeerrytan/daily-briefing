@@ -88,16 +88,18 @@ app.post("/login/email", async (req, res) => {
 });
 
 app.post("/get/google", async (req, res) => {
+	const word = req.body.word;
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 	const firstName = req.body.firstName;
 
 	const response = await customsearch.cse.list({
 		cx: "017576662512468239146:omuauf_lfve",
-		q: "lectures",
+		q: word,
 		auth: "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
 	});
 	console.log(response.data);
-	return response.data;
+	const result = await JSON.stringify(response.data);
+	res.json(result);
 });
 
 app.use(function(err, req, res) {

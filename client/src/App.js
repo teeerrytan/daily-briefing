@@ -269,11 +269,14 @@ class App extends Component {
 	};
 
 	getGoogle = async word => {
+		let result = 0
 		const jsonRes = await this.postRequest("/get/google", {
 			word: word
 		}).catch(err => console.log(err));
-		const result = JSON.parse(jsonRes);
-		return result;
+		// if ( jsonRes ) {
+		// 	result = JSON.parse(jsonRes);
+		// }
+		return jsonRes;
 		// JSON.stringify(res);
 	};
 

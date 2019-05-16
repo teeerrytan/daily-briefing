@@ -88,16 +88,15 @@ app.post("/login/email", async (req, res) => {
 });
 
 app.post("/get/google", async (req, res) => {
-	const searchString = req.body.word;
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 	const firstName = req.body.firstName;
 	const lastName = req.body.lastName;
 	const company = req.body.company;
 	const news = req.body.company;
 
-	const searchString = firstName + "+" + lastName + "+" + company;
+	let searchString = firstName + "+" + lastName + "+" + company
 	if (news) {
-		searchString += "+news";
+		searchString = company + "+news"
 	}
 
 	const response = await customsearch.cse.list({
@@ -106,8 +105,7 @@ app.post("/get/google", async (req, res) => {
 		auth: "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
 	});
 	console.log(response.data);
-	const result = await JSON.stringify(response.data);
-	res.json(result);
+	res.json(response.data);
 });
 
 app.use(function(err, req, res) {

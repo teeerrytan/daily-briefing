@@ -97,7 +97,7 @@ app.post("/get/google", async (req, res) => {
 
 	var searchString = name + "+" + company;
 	if (news) {
-		searchString += "+news";
+		searchString = company + "+news";
 	}
 
 	const response = await customsearch.cse.list({

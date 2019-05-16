@@ -107,7 +107,7 @@ app.post("/get/google", async (req, res) => {
 	});
 	console.log(response.data);
 	const result = await JSON.stringify(response.data);
-	res.json(result);
+	res.send(result);
 });
 
 app.use(function(err, req, res) {

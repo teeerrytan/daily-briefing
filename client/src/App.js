@@ -132,7 +132,7 @@ class App extends Component {
 					icon: "work",
 					title: `Meeting with ${item.name} from ${item.company}`,
 					subTitle: `${item.time}`.replace("T", " Time: "),
-					result: item.result
+					result: JSON.parse(item.result)
 				};
 				events.push(temp);
 			}
@@ -226,32 +226,38 @@ class App extends Component {
 			name: userData.name,
 			company: userData.company
 		};
-		const tempResult = await this.getGoogle(query);
-		const result = {
-			link: tempResult.items[0].link,
-			snippet: tempResult.items[0].snippet
-		};
-		//add to firebase
-		const strResult = await JSON.stringify(result);
-		var curEventId = Number(localStorage.getItem("curEventId")) + 1;
-		var updateData = {
-			company: userData.company,
-			name: userData.name,
-			time: userData.time,
-			id: curEventId,
-			result: strResult
-		};
-		updates["/" + localStorage.getItem("uid") + "/curEventId"] = curEventId;
-		updates[
-			"/" +
-				localStorage.getItem("uid") +
-				"/events/".concat(`${curEventId}`)
-		] = updateData;
+		if (query) {
+			const tempResult = await this.getGoogle(query);
+			const result = {
+				link: tempResult.items[0].link,
+				title: tempResult.items[0].title
+			};
+			//add to firebase
+			const strResult = await JSON.stringify(result);
+			var curEventId = Number(localStorage.getItem("curEventId")) + 1;
+			var updateData = {
+				company: userData.company,
+				name: userData.name,
+				time: userData.time,
+				id: curEventId,
+				result: strResult
+			};
+			updates[
+				"/" + localStorage.getItem("uid") + "/curEventId"
+			] = curEventId;
+			updates[
+				"/" +
+					localStorage.getItem("uid") +
+					"/events/".concat(`${curEventId}`)
+			] = updateData;
 
-		await userRef.update(updates);
+			await userRef.update(updates);
 
-		localStorage.setItem("curEventId", curEventId);
-		return result;
+			localStorage.setItem("curEventId", curEventId);
+			return result;
+		} else {
+			console.log("query is undefined!");
+		}
 	};
 
 	deleteEvent = async userData => {
@@ -268,12 +274,16 @@ class App extends Component {
 	};
 
 	getGoogle = async query => {
-		const jsonRes = await this.postRequest("/get/google", {
-			query: JSON.stringify(query)
-		}).catch(err => console.log(err));
-		const result = JSON.parse(jsonRes);
-		return result;
-		// JSON.stringify(res);
+		try {
+			const jsonRes = await this.postRequest("/get/google", {
+				query: JSON.stringify(query)
+			}).catch(err => console.log(err));
+			const result = await JSON.parse(jsonRes);
+			return result;
+			// JSON.stringify(res);
+		} catch (e) {
+			console.log("error line 263: ", e);
+		}
 	};
 
 	render() {

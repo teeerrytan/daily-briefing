@@ -70,9 +70,10 @@ class FolderList extends React.Component {
 		if (localStorage.getItem("events")) {
 			let initial = JSON.parse(localStorage.getItem("events"));
 			console.log("initial is", initial);
+
 			for (var item of initial) {
-				const tempResult = JSON.parse(item.result);
-				item.result = tempResult.snippet;
+				const tempResult = item.result;
+				item.result = tempResult.title;
 				item.link = tempResult.link;
 			}
 			this.setState(prevState => ({
@@ -80,9 +81,10 @@ class FolderList extends React.Component {
 			}));
 		} else {
 			let initial = this.props.user.user.events;
+
 			for (var item of initial) {
-				const tempResult = JSON.parse(item.result);
-				item.result = tempResult.snippet;
+				const tempResult = item.result;
+				item.result = tempResult.title;
 				item.link = tempResult.link;
 			}
 			this.setState(prevState => ({
@@ -101,6 +103,7 @@ class FolderList extends React.Component {
 			icon: "work",
 			title: `Meeting with ${this.state.name} from ${this.state.company}`,
 			subTitle: `${this.state.time}`.replace("T", " Time: "),
+			link: "temp",
 			result: `Loading...  `
 		};
 		await this.setState(prevState => ({

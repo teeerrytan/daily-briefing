@@ -67,19 +67,28 @@ class FolderList extends React.Component {
 						</IconButton>
 					</ListItemSecondaryAction>
 				</ListItem>
+
 				<Collapse in={this.state.open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListItem button className={classes.nested}>
+						<ListItem className={classes.nested}>
 							<ListItemIcon>
 								<MaterialIcon icon="star" />
 							</ListItemIcon>
-							<ListItemText
-								inset
-								primary={this.state.content.result}
-							/>
+							<a
+								href={this.state.content.link}
+								target="_blank"
+								style={{ textDecoration: "none" }}
+							>
+								<ListItemText
+									inset
+									primary={this.state.content.result}
+									secondary={this.state.content.link}
+								/>
+							</a>
 						</ListItem>
 					</List>
 				</Collapse>
+
 				<Divider />
 			</div>
 		);

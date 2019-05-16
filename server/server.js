@@ -88,13 +88,14 @@ app.post("/login/email", async (req, res) => {
 });
 
 app.post("/get/google", async (req, res) => {
+	const query = JSON.parse(req.body.query);
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
-	const firstName = req.body.firstName;
-	const lastName = req.body.lastName;
-	const company = req.body.company;
-	const news = req.body.company;
+	var tempName = query.name;
+	const company = query.company;
+	const news = query.tempName;
+	const name = tempName.replace(/ /g, "+");
 
-	let searchString = firstName + "+" + lastName + "+" + company
+	var searchString = name + "+" + company;
 	if (news) {
 		searchString = company + "+news"
 	}
@@ -102,7 +103,7 @@ app.post("/get/google", async (req, res) => {
 	const response = await customsearch.cse.list({
 		cx: "006675396895376221043:exnywglx5_8", // Specific search engine that we created... only contains a few websites
 		q: searchString,
-		auth: "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI"
+		auth: searchCred
 	});
 	console.log(response.data);
 	res.json(response.data);

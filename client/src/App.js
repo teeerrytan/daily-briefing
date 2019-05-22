@@ -251,7 +251,12 @@ class App extends Component {
 				result: {
 					link: tempResult.items[0].link,
 					title: tempResult.items[0].title
-				}
+				},
+
+				icon: "work",
+				title: `Meeting with ${userData.name} from ${userData.company}`,
+				subTitle: `${userData.time}`.replace("T", " Time: "),
+				link: tempResult.items[0].link
 			};
 			updates[
 				"/" + localStorage.getItem("uid") + "/curEventId"

@@ -139,6 +139,7 @@ class Dashboard extends Component {
 			"Tomorrow, you have " +
 			eventsList.length +
 			" meetings throughout the day. Details about these meetings are listed below. \n \n \n";
+
 		eventsList.forEach(events => {
 			message += "On " + events.time;
 			message +=

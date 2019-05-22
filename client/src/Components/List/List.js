@@ -112,8 +112,6 @@ class FolderList extends React.Component {
 			open: false
 		}));
 
-		localStorage.setItem("events", JSON.stringify(this.state.contents));
-
 		let userData = {
 			uid: this.props.uid,
 			name: this.state.name,

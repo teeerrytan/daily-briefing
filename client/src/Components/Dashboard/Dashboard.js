@@ -67,7 +67,7 @@ class Dashboard extends Component {
 			data: "",
 			// photoURL: this.props.user.photoURL,
 			// displayName: this.props.user.displayName,
-			// email: this.props.user.email
+			// email: this.props.user.email,
 			searchResponse: null
 		};
 	}
@@ -117,7 +117,7 @@ class Dashboard extends Component {
 			}
 		];
 
-		let message = "Hello User, \n \n"
+		let message = ""
 		message += "Tomorrow, you have " + fakeEvents.length + " meetings throughout the day. Details about these meetings are listed below. \n \n \n"
 		fakeEvents.forEach((events) => {
 			message += "On " + events.time + " at " + events.location;
@@ -150,6 +150,8 @@ class Dashboard extends Component {
 
 		// Basically take info above and make template for nice email.
 		console.log(message);
+
+		this.send("sadie.j.hood@gmail.com", "Sadie", message)
 	}
 
 	send(email, user1, message1) {
@@ -157,8 +159,9 @@ class Dashboard extends Component {
 		var service_id = "default_service";
 		var template_id = " template_vnqh5vdO";
 		var user_id = "user_5wah7rPNg4BH4ntQ0325x";
+		var email1 = "sadie.j.hood@gmail.com"
 		var params = {
-			to_email: "sadie.j.hood@gmail.com",
+			to_email: email1,
 			user: user1.toString(),
 			message: message1.toString()
 		};

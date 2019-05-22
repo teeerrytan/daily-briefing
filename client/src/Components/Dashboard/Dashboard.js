@@ -78,75 +78,121 @@ class Dashboard extends Component {
 	}
 
 	constructMessage() {
-		var fakeEvents = [
-			{
-				name: "Thomas Delaney",
-				company: "Enodo",
-				time: "Thursday May 16th at 9:30am",
-				location: "Generic Address",
-				title: "Thomas Delaney - Chief Operating Officer - Enodo Inc | LinkedIn",
-				meetings: 0,
-				news: ""
-			},
-			{
-				name: "Robert Johnson",
-				company: "Enodo",
-				time: "Thursday May 16th at 11:30am",
-				location: "Generic Address",
-				title: "Robert A Johnson - Product Manager - Enodo Inc | LinkedIn",
-				meetings: 3,
-				news: ""
-			},
-			{
-				name: "Lindsay Slutzky",
-				company: "Jiobit",
-				time: "Thursday May 16th at 3:30pm",
-				location: "Generic Address",
-				title: "Lindsay Slutzky - Head Of Media Relations - Jiobit | LinkedIn",
-				meetings: 2,
-				news: "You Can Now Learn Hawaii's Native Language Using An App | Here ...",
-			},
-			{
-				name: "John Renaldi",
-				company: "Enodo",
-				time: "Thursday May 16th at 4:30pm",
-				location: "Generic Address",
-				title: "John Renaldi - Co-Founder & CEO - Jiobit | LinkedIn",
-				meetings: 0,
-				news: ""
-			}
-		];
+		const eventsList = JSON.parse(localStorage.getItem("events"));
 
-		let message = "Hello User, \n \n"
-		message += "Tomorrow, you have " + fakeEvents.length + " meetings throughout the day. Details about these meetings are listed below. \n \n \n"
-		fakeEvents.forEach((events) => {
-			message += "On " + events.time + " at " + events.location;
-			message += " you are meeting with " + events.name + " from " + events.company + ". ";
+		//event sample
+		// {
+		// 	name: events.name,
+		// 	company: events.company,
+		// 	time: events.time,
+		//  location: // todo
+		// 	title:
+		// 		events.result.title
+		//  meetings: // todo
+		// }
 
-			let userTitle = events.title.split('-')
+		// var fakeEvents = [
+		// 	{
+		// 		name: "Thomas Delaney",
+		// 		company: "Enodo",
+		// 		time: "Thursday May 16th at 9:30am",
+		// 		location: "Generic Address",
+		// 		title:
+		// 			"Thomas Delaney - Chief Operating Officer - Enodo Inc | LinkedIn",
+		// 		meetings: 0,
+		// 		news: ""
+		// 	},
+		// 	{
+		// 		name: "Robert Johnson",
+		// 		company: "Enodo",
+		// 		time: "Thursday May 16th at 11:30am",
+		// 		location: "Generic Address",
+		// 		title:
+		// 			"Robert A Johnson - Product Manager - Enodo Inc | LinkedIn",
+		// 		meetings: 3,
+		// 		news: ""
+		// 	},
+		// 	{
+		// 		name: "Lindsay Slutzky",
+		// 		company: "Jiobit",
+		// 		time: "Thursday May 16th at 3:30pm",
+		// 		location: "Generic Address",
+		// 		title:
+		// 			"Lindsay Slutzky - Head Of Media Relations - Jiobit | LinkedIn",
+		// 		meetings: 2,
+		// 		news:
+		// 			"You Can Now Learn Hawaii's Native Language Using An App | Here ..."
+		// 	},
+		// 	{
+		// 		name: "John Renaldi",
+		// 		company: "Enodo",
+		// 		time: "Thursday May 16th at 4:30pm",
+		// 		location: "Generic Address",
+		// 		title: "John Renaldi - Co-Founder & CEO - Jiobit | LinkedIn",
+		// 		meetings: 0,
+		// 		news: ""
+		// 	}
+		// ];
 
-			message += events.name + " is the" + userTitle[1] + "for " + events.company + ". ";
+		let message = "Hello User, \n \n";
+		message +=
+			"Tomorrow, you have " +
+			eventsList.length +
+			" meetings throughout the day. Details about these meetings are listed below. \n \n \n";
+		eventsList.forEach(events => {
+			message += "On " + events.time;
+			message +=
+				" you are meeting with " +
+				events.name +
+				" from " +
+				events.company +
+				". ";
 
-			if ( events.meetings === 0 ) {
-				message += "You have not met with " + events.name + " before."
-			} else {
-				message += "You have met with " + events.name + " " + events.meetings.toString() + " times before."
-			}
+			let userTitle = events.result.title;
+
+			message +=
+				events.name +
+				" is the" +
+				userTitle +
+				"for " +
+				events.company +
+				". ";
+
+			// if (events.meetings === 0) {
+			// 	message += "You have not met with " + events.name + " before.";
+			// } else {
+			// 	message +=
+			// 		"You have met with " +
+			// 		events.name +
+			// 		" " +
+			// 		events.meetings.toString() +
+			// 		" times before.";
+			// }
 			if (events.news === "") {
-				message += " There has not been any big news surrounding " + events.company + " recently. "
+				message +=
+					" There has not been any big news surrounding " +
+					events.company +
+					" recently. ";
 			} else {
-				message += " There has been some recent news surrounding " + events.company + " regarding how " + events.news.split(" |")[0] + ". "
+				message +=
+					" There has been some recent news surrounding " +
+					events.company +
+					" regarding how " +
+					events.result.title +
+					". ";
 			}
-			message += "\n \n"
-		})
+			message += "\n \n";
+		});
 
-		message += "You will receive information regarding your meetings tomorrow at midnight before any of your meetings."
-		message += "Thank you for using Daily Briefing for your everyday meeting needs. \n"
-		message += "Sincerely, \n"
-		message += "Daily Briefing Team \n \n \n "
-		message += "If you'd like to unsubscribe please click here link. \n"
+		message +=
+			"You will receive information regarding your meetings tomorrow at midnight before any of your meetings.";
+		message +=
+			"Thank you for using Daily Briefing for your everyday meeting needs. \n";
+		message += "Sincerely, \n";
+		message += "Daily Briefing Team \n \n \n ";
+		message += "If you'd like to unsubscribe please click here link. \n";
 
-		console.log(message)
+		console.log(message);
 
 		// Basically take info above and make template for nice email.
 		console.log(message);

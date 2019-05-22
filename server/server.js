@@ -88,6 +88,7 @@ app.post("/login/email", async (req, res) => {
 });
 
 app.post("/get/google", async (req, res) => {
+	console.log("query", req.body.query);
 	const query = JSON.parse(req.body.query);
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
 	var tempName = query.name;

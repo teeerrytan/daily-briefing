@@ -105,7 +105,7 @@ class App extends Component {
 		// 	displayName: data.user.displayName,
 		// 	email: data.user.email
 		// });
-		var str = JSON.stringify(events);
+		var str = await JSON.stringify(events);
 		await localStorage.setItem("events", str);
 		const state = {
 			user: {
@@ -117,10 +117,11 @@ class App extends Component {
 			},
 			auth: true
 		};
-
 		this.saveState(state);
 		this.props.dispatch(login(state));
 		console.log("success content is: " + success);
+		console.log("events localStorage", localStorage.getItem("events"));
+
 		return success;
 	};
 
@@ -132,7 +133,10 @@ class App extends Component {
 					icon: "work",
 					title: `Meeting with ${item.name} from ${item.company}`,
 					subTitle: `${item.time}`.replace("T", " Time: "),
-					result: JSON.parse(item.result)
+					result: item.result,
+					name: item.name,
+					time: `${item.time}`.replace("T", " Time: "),
+					company: item.company
 				};
 				events.push(temp);
 			}
@@ -193,6 +197,7 @@ class App extends Component {
 
 			this.saveState(state);
 			this.props.dispatch(login(state));
+			console.log(localStorage.getItem("events"));
 			return "1";
 		} else {
 			return res.error;
@@ -226,21 +231,27 @@ class App extends Component {
 			name: userData.name,
 			company: userData.company
 		};
+
 		if (query) {
-			const tempResult = await this.getGoogle(query);
+			const queryJson = JSON.stringify(query);
+			const tempResult = await this.getGoogle(queryJson);
+			console.log("tempResult", tempResult);
+			//add to firebase
+
+			var curEventId = Number(localStorage.getItem("curEventId")) + 1;
 			const result = {
 				link: tempResult.items[0].link,
 				title: tempResult.items[0].title
 			};
-			//add to firebase
-			const strResult = await JSON.stringify(result);
-			var curEventId = Number(localStorage.getItem("curEventId")) + 1;
 			var updateData = {
 				company: userData.company,
 				name: userData.name,
 				time: userData.time,
 				id: curEventId,
-				result: strResult
+				result: {
+					link: tempResult.items[0].link,
+					title: tempResult.items[0].title
+				}
 			};
 			updates[
 				"/" + localStorage.getItem("uid") + "/curEventId"
@@ -254,6 +265,12 @@ class App extends Component {
 			await userRef.update(updates);
 
 			localStorage.setItem("curEventId", curEventId);
+			const events = JSON.parse(localStorage.getItem("events"));
+			if (typeof events !== "undefined") {
+				await events.push(updateData);
+				const tempStr = await JSON.stringify(events);
+				localStorage.setItem("events", tempStr);
+			}
 			return result;
 		} else {
 			console.log("query is undefined!");
@@ -276,10 +293,11 @@ class App extends Component {
 	getGoogle = async query => {
 		try {
 			const jsonRes = await this.postRequest("/get/google", {
-				query: JSON.stringify(query)
+				query: query
 			}).catch(err => console.log(err));
-			const result = await JSON.parse(jsonRes);
-			return result;
+			console.log(jsonRes);
+
+			return jsonRes;
 			// JSON.stringify(res);
 		} catch (e) {
 			console.log("error line 263: ", e);

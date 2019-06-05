@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import "./App.css";
 import axios from "axios";
 import Signin from "./Components/Signin/Signin";
@@ -99,12 +100,6 @@ class App extends Component {
 			}
 		}
 
-		//update store
-		// this.setState({
-		// 	photoURL: data.user.photoURL,
-		// 	displayName: data.user.displayName,
-		// 	email: data.user.email
-		// });
 		var str = await JSON.stringify(events);
 		await localStorage.setItem("events", str);
 		const state = {
@@ -228,35 +223,62 @@ class App extends Component {
 		var updates = {};
 		//call search api
 		const query = {
-			name: userData.name,
-			company: userData.company
+			person: {
+				type: "person",
+				name: userData.name,
+				company: userData.company
+			},
+			company: {
+				type: "company",
+				name: userData.name,
+				company: userData.company
+			},
+			stock: {
+				type: "stock",
+				name: userData.name,
+				company: userData.company
+			}
 		};
 
 		if (query) {
-			const queryJson = JSON.stringify(query);
-			const tempResult = await this.getGoogle(queryJson);
-			console.log("tempResult", tempResult);
+			const personQuery = JSON.stringify(query.person);
+			const companyQuery = JSON.stringify(query.company);
+			const stockQuery = JSON.stringify(query.stock);
+
+			const personResult = await this.getGoogle(personQuery);
+			const companyResult = await this.getGoogle(companyQuery);
+			const stockResult = await this.getGoogle(stockQuery);
+
+			console.log("personResult", personResult);
+			console.log("companyResult", companyResult);
+			console.log("stockResult", stockResult);
 			//add to firebase
 
 			var curEventId = Number(localStorage.getItem("curEventId")) + 1;
-			const result = {
-				link: tempResult.items[0].link,
-				title: tempResult.items[0].title
-			};
+
 			var updateData = {
 				company: userData.company,
 				name: userData.name,
-				time: userData.time,
+				time: `${userData.time}`.replace("T", " Time: "),
 				id: curEventId,
 				result: {
-					link: tempResult.items[0].link,
-					title: tempResult.items[0].title
+					person: {
+						link: personResult.items[0].link,
+						title: personResult.items[0].title
+					},
+					company: {
+						link: companyResult.items[0].link,
+						title: companyResult.items[0].title
+					},
+					stock: {
+						link: stockResult.items[0].link,
+						title: stockResult.items[0].title
+					}
 				},
-
 				icon: "work",
 				title: `Meeting with ${userData.name} from ${userData.company}`,
 				subTitle: `${userData.time}`.replace("T", " Time: "),
-				link: tempResult.items[0].link
+				link: personResult.items[0].link
 			};
 			updates[
 				"/" + localStorage.getItem("uid") + "/curEventId"
@@ -276,13 +298,25 @@ class App extends Component {
 				const tempStr = await JSON.stringify(events);
 				localStorage.setItem("events", tempStr);
 			}
-			return result;
+			return;
 		} else {
 			console.log("query is undefined!");
 		}
 	};
 
 	deleteEvent = async userData => {
+		const events = JSON.parse(localStorage.getItem("events"));
+		if (typeof events !== "undefined") {
+			for (let i = 0; i < events.length; i++) {
+				if (events[i].id == userData.id) {
+					//delete
+					await events.splice(i, 1);
+				}
+			}
+			const tempStr = await JSON.stringify(events);
+			localStorage.setItem("events", tempStr);
+		}
+
 		var updates = {};
 		updates[
 			"/" +
@@ -353,7 +387,6 @@ class App extends Component {
 							addEvent={userData => this.addEvent(userData)}
 							deleteEvent={userData => this.deleteEvent(userData)}
 							changePage={cur => this.changePage(cur)}
-							getGoogle={this.getGoogle(this.state.events)}
 							photoURL={this.state.photoURL}
 							displayName={this.state.displayName}
 							email={this.state.email}

@@ -72,11 +72,6 @@ class Dashboard extends Component {
 		};
 	}
 
-	async getSearch(results) {
-		const result = await this.props.getGoogle();
-		console.log(result);
-	}
-
 	constructMessage() {
 		const eventsList = JSON.parse(localStorage.getItem("events"));
 
@@ -87,8 +82,10 @@ class Dashboard extends Component {
 		// 	time: events.time,
 		//  location: // todo
 		// 	title:
-		// 		events.result.title
+		// 		events.result.person.title
+		//	news: events.result.companyNews.title
 		//  meetings: // todo
+
 		// }
 
 		// var fakeEvents = [
@@ -140,48 +137,51 @@ class Dashboard extends Component {
 			eventsList.length +
 			" meetings throughout the day. Details about these meetings are listed below. \n \n \n";
 
-		eventsList.forEach(events => {
-			message += "On " + events.time;
+		eventsList.forEach(event => {
+			message += "On " + event.time;
 			message +=
 				" you are meeting with " +
-				events.name +
+				event.name +
 				" from " +
-				events.company +
-				". ";
-
-			let userTitle = events.result.title;
+				event.company +
+				". \n";
 
 			message +=
-				events.name +
-				" is the" +
-				userTitle +
-				"for " +
-				events.company +
-				". ";
+				"Here is some information about " +
+				event.name +
+				": \n" +
+				event.result.person.title +
+				"\n Click the link to read more: " +
+				event.result.person.link;
+			// let userTitle = event.result.title;
 
-			// if (events.meetings === 0) {
-			// 	message += "You have not met with " + events.name + " before.";
+			// message +=
+			// 	event.name +
+			// 	" is the" +
+			// 	userTitle +
+			// 	"for " +
+			// 	event.company +
+			// 	". ";
+
+			// if (event.meetings === 0) {
+			// 	message += "You have not met with " + event.name + " before.";
 			// } else {
 			// 	message +=
 			// 		"You have met with " +
-			// 		events.name +
+			// 		event.name +
 			// 		" " +
-			// 		events.meetings.toString() +
+			// 		event.meetings.toString() +
 			// 		" times before.";
 			// }
-			if (events.news === "") {
-				message +=
-					" There has not been any big news surrounding " +
-					events.company +
-					" recently. ";
-			} else {
-				message +=
-					" There has been some recent news surrounding " +
-					events.company +
-					" regarding how " +
-					events.result.title +
-					". ";
-			}
+
+			message +=
+				" There has been some recent news surrounding " +
+				event.company +
+				" regarding how " +
+				event.result.company.title +
+				"\n Click the link to read more: " +
+				event.result.company.link;
+
 			message += "\n \n";
 		});
 

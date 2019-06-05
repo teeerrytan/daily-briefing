@@ -14,6 +14,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import { connect } from "react-redux";
@@ -58,7 +59,9 @@ class FolderList extends React.Component {
 			name: "",
 			company: "",
 			time: "2019-05-24T10:30",
-			id: Number(localStorage.getItem("curEventId"))
+			id: Number(localStorage.getItem("curEventId")),
+			refresh: false,
+			modalOpen: false
 		};
 	}
 
@@ -73,8 +76,13 @@ class FolderList extends React.Component {
 
 			for (var item of initial) {
 				const tempResult = item.result;
-				item.result = tempResult.title;
-				item.link = tempResult.link;
+				console.log("tempResult is", tempResult);
+				// item.personTitle = tempResult.person.title;
+				// item.personLink = tempResult.person.link;
+				item.result = tempResult.person.title;
+				item.link = tempResult.person.link;
+				item.newsTitle = tempResult.company.title;
+				item.newsLink = tempResult.company.link;
 			}
 			this.setState(prevState => ({
 				contents: initial
@@ -84,8 +92,12 @@ class FolderList extends React.Component {
 
 			for (var item of initial) {
 				const tempResult = item.result;
-				item.result = tempResult.title;
-				item.link = tempResult.link;
+				// item.personTitle = tempResult.person.title;
+				// item.personLink = tempResult.person.link;
+				item.result = tempResult.person.title;
+				item.link = tempResult.person.link;
+				item.newsTitle = tempResult.company.title;
+				item.newsLink = tempResult.company.link;
 			}
 			this.setState(prevState => ({
 				contents: initial
@@ -98,18 +110,10 @@ class FolderList extends React.Component {
 	};
 
 	handleAdd = async () => {
-		let item = {
-			id: this.state.id + 1,
-			icon: "work",
-			title: `Meeting with ${this.state.name} from ${this.state.company}`,
-			subTitle: `${this.state.time}`.replace("T", " Time: "),
-			link: "temp",
-			result: `Loading...  `
-		};
 		await this.setState(prevState => ({
 			id: prevState.id + 1,
-			contents: [...prevState.contents, item],
-			open: false
+			open: false,
+			modalOpen: true
 		}));
 
 		let userData = {
@@ -120,8 +124,49 @@ class FolderList extends React.Component {
 			id: this.state.id
 		};
 
-		await this.props.addEvent(userData);
+		await this.callAddAndCloseModal(userData);
+
 		return;
+	};
+
+	callAddAndCloseModal = async userData => {
+		await this.props.addEvent(userData);
+
+		if (localStorage.getItem("events")) {
+			let initial = JSON.parse(localStorage.getItem("events"));
+			console.log("initial is", initial);
+
+			for (var item of initial) {
+				const tempResult = item.result;
+				console.log("tempResult is", tempResult);
+				// item.personTitle = tempResult.person.title;
+				// item.personLink = tempResult.person.link;
+				item.result = tempResult.person.title;
+				item.link = tempResult.person.link;
+				item.newsTitle = tempResult.company.title;
+				item.newsLink = tempResult.company.link;
+			}
+			this.setState(prevState => ({
+				contents: initial,
+				modalOpen: false
+			}));
+		} else {
+			let initial = this.props.user.user.events;
+
+			for (var item of initial) {
+				const tempResult = item.result;
+				// item.personTitle = tempResult.person.title;
+				// item.personLink = tempResult.person.link;
+				item.result = tempResult.person.title;
+				item.link = tempResult.person.link;
+				item.newsTitle = tempResult.company.title;
+				item.newsLink = tempResult.company.link;
+			}
+			this.setState(prevState => ({
+				contents: initial,
+				modalOpen: false
+			}));
+		}
 	};
 
 	handleAddOpen = () => {
@@ -187,6 +232,19 @@ class FolderList extends React.Component {
 				))}
 
 				<MuiThemeProvider theme={theme}>
+					<Dialog
+						open={this.state.modalOpen}
+						aria-labelledby="alert-dialog-title"
+						aria-describedby="alert-dialog-description"
+					>
+						<DialogTitle id="alert-dialog-title">
+							{"Mission processing..."}
+						</DialogTitle>
+						<DialogContent>
+							<LinearProgress />
+						</DialogContent>
+					</Dialog>
+
 					<Dialog
 						open={this.state.open}
 						onClose={this.handleAddClose}

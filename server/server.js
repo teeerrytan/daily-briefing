@@ -91,18 +91,22 @@ app.post("/get/google", async (req, res) => {
 	console.log("query", req.body.query);
 	const query = JSON.parse(req.body.query);
 	var searchCred = "AIzaSyDLYZcB2ApjyGw4Do1-aiqIq5LSq-a6mNI";
-	var tempName = query.name;
-	const company = query.company;
-	const news = query.tempName;
-	const name = tempName.replace(/ /g, "+");
+	const type = query.type;
+	var searchString = "";
 
-	var searchString = name + "+" + company;
-	if (news) {
-		searchString = company + "+news";
+	const company = query.company.replace(/ /g, "+");
+	const name = query.name.replace(/ /g, "+");
+
+	if (type === "person") {
+		searchString = name + "+" + company + "+linkedin";
+	} else if (type === "company") {
+		searchString = company + "+wiki";
+	} else {
+		searchString = company + "+stock";
 	}
 
 	const response = await customsearch.cse.list({
-		cx: "006675396895376221043:exnywglx5_8", // Specific search engine that we created... only contains a few websites
+		cx: "006675396895376221043:tdxocg2wtd8", // Specific search engine that we created... only contains a few websites
 		q: searchString,
 		auth: searchCred
 	});

@@ -259,7 +259,7 @@ class App extends Component {
 			var updateData = {
 				company: userData.company,
 				name: userData.name,
-				time: `${userData.time}`.replace("T", " Time: "),
+				time: `${userData.time}`.replace("T", " at "),
 				id: curEventId,
 				result: {
 					person: {

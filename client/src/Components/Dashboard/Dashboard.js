@@ -131,89 +131,64 @@ class Dashboard extends Component {
 		// 	}
 		// ];
 
-		let message = "Hello User, \n \n";
+		let message = "";
 		message +=
-			"Tomorrow, you have " +
+			"<p>Today, you have " +
 			eventsList.length +
-			" meetings throughout the day. Details about these meetings are listed below. \n \n \n";
+			" meetings. Details are listed below. </p>";
 
 		eventsList.forEach(event => {
-			message += "On " + event.time;
+			message += "<p><b>At " + event.time.split(" ")[2];
 			message +=
-				" you are meeting with " +
+				", you are meeting with " +
 				event.name +
 				" from " +
 				event.company +
-				". \n";
+				". </b><br />";
 
 			message +=
 				"Here is some information about " +
 				event.name +
-				": \n" +
-				event.result.person.title +
-				"\n Click the link to read more: " +
-				event.result.person.link;
-			// let userTitle = event.result.title;
-
-			// message +=
-			// 	event.name +
-			// 	" is the" +
-			// 	userTitle +
-			// 	"for " +
-			// 	event.company +
-			// 	". ";
-
-			// if (event.meetings === 0) {
-			// 	message += "You have not met with " + event.name + " before.";
-			// } else {
-			// 	message +=
-			// 		"You have met with " +
-			// 		event.name +
-			// 		" " +
-			// 		event.meetings.toString() +
-			// 		" times before.";
-			// }
+				":<br />" +
+				event.result.person.title.replace(" | LinkedIn", "") +
+				": <a href='" +
+				event.result.person.link +
+				"'>LinkedIn Profile</a><br />";
 
 			message +=
-				" There has been some recent news surrounding " +
+				" Click <a href='" +
+				event.result.company.link +
+				"'>here</a> for background about " +
 				event.company +
-				" regarding how " +
-				event.result.company.title +
-				"\n Click the link to read more: " +
-				event.result.company.link;
+				". <br />";
 
-			message += "\n \n";
+			message +=
+				"Click <a href='" +
+				event.result.stock.link +
+				"'>here</a> for stock price and recent news.";
+
+			message += "</p>";
 		});
 
-		message +=
-			"You will receive information regarding your meetings tomorrow at midnight before any of your meetings.";
-		message +=
-			"Thank you for using Daily Briefing for your everyday meeting needs. \n";
-		message += "Sincerely, \n";
-		message += "Daily Briefing Team \n \n \n ";
-		message += "If you'd like to unsubscribe please click here link. \n";
-
-		console.log(message);
-
-		// Basically take info above and make template for nice email.
-		console.log(message);
-
-		this.send("sadie.j.hood@gmail.com", "Sadie", message);
+		this.send("terrytan7172@gmail.com", "Terry", message);
 	}
 
 	send(email, user1, message1) {
 		var emailjs = require("emailjs-com");
-		var service_id = "default_service";
-		var template_id = " template_vnqh5vdO";
-		var user_id = "user_5wah7rPNg4BH4ntQ0325x";
-		var email1 = "sadie.j.hood@gmail.com";
+		var service_id = "daily-briefing";
+		//var template_id = " template_vnqh5vdO";
+		var template_id = "template_zu9tESJx";
+
+		//var user_id = "user_5wah7rPNg4BH4ntQ0325x";
+		var user_id = "user_qFXBNrUjYYptWrLbSYpyi";
+		var email1 = email;
 		var params = {
 			to_email: email1,
 			user: user1.toString(),
 			message: message1.toString()
 		};
 
-		emailjs.send("gmail", "template_vnqh5vdO", params, user_id).then(
+		emailjs.send(service_id, template_id, params, user_id).then(
 			function() {
 				console.log("success");
 			},

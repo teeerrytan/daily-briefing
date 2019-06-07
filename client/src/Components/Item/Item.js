@@ -52,11 +52,7 @@ class FolderList extends React.Component {
 						primary={this.state.content.title}
 						secondary={this.state.content.subTitle}
 					/>
-					{this.state.open ? (
-						<MaterialIcon icon="keyboard_arrow_up" />
-					) : (
-						<MaterialIcon icon="keyboard_arrow_down" />
-					)}
+
 					<ListItemSecondaryAction className="delete-button">
 						<IconButton
 							aria-label="Delete"

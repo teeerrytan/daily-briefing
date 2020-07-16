@@ -19,7 +19,7 @@
 		"firebase": "^5.9.4",
 		"firebase-admin": "^6.5.0",
 		"googleapis": "^39.2.0",
-		"lodash": "^4.17.11",
+		"lodash": "^4.17.19",
 		"nodemon": "^1.18.9",
 		"redis": "^2.8.0"
 	}
